@@ -114,7 +114,7 @@ const Home = () => {
                                             animate={{ opacity: 1 }}
                                             transition={{ duration: 1, delay: 0.3 }}
                                             className="home-content-description text-lg text-gray-600">
-                                            Secure, actionable signals. Your wallet, your trades, your profits—100% in your control. Powered by cutting-edge data science and industry-first logic for consistent, reliable profits.
+                                          Secure crypto signals putting you in control. Actionable insights, your wallet, your trades, your profits – powered by cutting-edge data science for consistent, reliable gains.
                                         </motion.div>
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}
@@ -186,7 +186,7 @@ const Home = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 1, delay: 0.3 }}
                                 className='text-gray-500 pb-6 text-center text-lg md:text-xl px-10 md:px-40'>
-                                Find the best signal with good profit %. The signal will include a list of coin pairs and exchange pairs with clear profit opportunities.
+                               Discover today's best crypto signals for substantial profits. Get expert insights on high-potential coin pairs and top exchanges. Start maximizing your crypto gains now!
                             </motion.p>
                         </div>
                         <ProfitCycle />
@@ -239,7 +239,9 @@ const Home = () => {
                                     className="home-title-text mt-0 ml-0 mr-0 m-6"
                                 >
                                     <p className="home-subtitle-text text-lg md:text-xl text-gray-500 pb-6">
-                                        ArbiScan simplifies crypto arbitrage by leveraging price differences across exchanges. It helps you buy low, sell high, and reallocate funds for maximum profits effortlessly.
+                                         
+ 	
+Simplify crypto arbitrage with ArbiScan. Automatically identify price differences across exchanges to buy low, sell high, and maximize your profits effortlessly.
                                     </p>
                                 </motion.div>
                                 <div className="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-10 pb-10">

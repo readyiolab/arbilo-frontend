@@ -22,7 +22,10 @@ const AdminLayout = lazy(() => import('../layout/AdminLayout/AdminLayout'));
 const AdminLogin = lazy(() => import('../pages/AdminLogin/AdminLogin'));
 const UserTable = lazy(() => import('../pages/AdminDashboard/UserTable'));
 const CreateCredential = lazy(() => import('../pages/CreateCredential/CreateCredential'));
-const Totaluser = lazy(() => import('../pages/AdminDashboard/Totaluser')); // Lazy load Totaluser
+const Totaluser = lazy(() => import('../pages/AdminDashboard/Totaluser'));
+const BlogList = lazy(() => import('../pages/Blog/BlogSection'));
+const BlogDetail = lazy(() => import('../pages/Blog/BlogDetail'));
+const AdminBlogManager = lazy(() => import('../pages/AdminBlogManager/AdminBlogManager'));
 
 const router = createBrowserRouter([
   {
@@ -40,6 +43,8 @@ const router = createBrowserRouter([
       { path: 'faq-section', element: <Suspense fallback={<Loader />}><Home /></Suspense> },
       { path: 'contact-section', element: <Suspense fallback={<Loader />}><Home /></Suspense> },
       { path: 'tips', element: <Suspense fallback={<Loader />}><Home /></Suspense> },
+      { path: 'blog-section', element: <Suspense fallback={<Loader />}><BlogList /></Suspense> },
+      { path: 'blog/:slug', element: <Suspense fallback={<Loader />}><BlogDetail /></Suspense> }, // Updated to use slug
     ],
   },
   {
@@ -118,7 +123,7 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <Suspense fallback={<Loader />}>
-            <Totaluser /> {/* Display Totaluser only on /admin-dashboard */}
+            <Totaluser />
           </Suspense>
         ),
       },
@@ -132,7 +137,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'profile',
-        element: <Suspense fallback={<Loader />}><AdminProfile/></Suspense>,
+        element: <Suspense fallback={<Loader />}><AdminProfile /></Suspense>,
+      },
+      {
+        path: 'blogs',
+        element: <Suspense fallback={<Loader />}><AdminBlogManager /></Suspense>,
       },
     ],
   },

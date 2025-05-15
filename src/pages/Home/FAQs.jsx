@@ -6,22 +6,22 @@ const faqs = [
   {
     question: "What is ArbiPair?",
     answer:
-      "ArbiPair is Arbilo’s unique algorithm designed for pair-based crypto arbitrage. It identifies profitable trading pairs across multiple exchanges, maximizing your profits while eliminating the need for fiat currency transfers.",
+      "Discover Arbilo's ArbiPair: a unique algorithm for pair-based crypto arbitrage. Maximize profits across exchanges without fiat transfers. Trade smarter, not harder!",
   },
   {
     question: "How is ArbiPair different from traditional crypto arbitrage?",
     answer:
-      "Unlike traditional crypto arbitrage, ArbiPair focuses on pair-based opportunities, reducing transaction costs and improving efficiency.",
+      "Unlike traditional methods, ArbiPair focuses on pair-based crypto arbitrage, significantly reducing transaction costs and boosting trading efficiency for maximized profits.",
   },
   {
     question: "What is ArbiTrack?",
     answer:
-      "ArbiTrack provides dynamic price insights for individual cryptocurrencies across multiple exchanges. It’s perfect for users who prefer traditional arbitrage methods of buying low on one exchange and selling high on another.",
+      "Master traditional crypto arbitrage with ArbiTrack. Get real-time price insights across multiple exchanges to buy low and sell high for maximum profit potential.",
   },
   {
     question: "Do I need to share my wallet or keys to use Arbilo?",
     answer:
-      "No, Arbilo ensures your privacy and security. You never need to share your wallet, keys, or passwords. All trades are executed directly by you on your chosen exchanges.",
+      "Arbilo ensures your complete privacy and security in crypto arbitrage. Trade directly on your exchanges – no wallet, keys, or passwords shared. Your control, guaranteed.",
   },
   {
     question: "Which exchanges and cryptocurrencies does Arbilo support?",

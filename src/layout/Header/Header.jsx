@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { UserCircleIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'; // Add useLocation
+import { Link as ScrollLink } from 'react-scroll';
+import { useState, useEffect } from 'react';
+import { UserCircleIcon } from 'lucide-react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Transition } from '@headlessui/react';
-import { Link } from 'react-scroll';
-import { useNavigate } from 'react-router-dom';
-import './Header.css';
 
 const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Get current route
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -24,6 +25,20 @@ const Header = () => {
     setIsDrawerOpen(false);
   };
 
+  // Handle scroll link clicks, navigating to home if not on home page
+  const handleScrollLinkClick = (to) => {
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: to } }); // Pass scroll target in state
+    } else {
+      // If already on home, just scroll
+      window.scrollTo({
+        top: document.getElementById(to)?.offsetTop || 0,
+        behavior: 'smooth',
+      });
+    }
+    setIsDrawerOpen(false); // Close drawer on mobile
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 50);
@@ -33,14 +48,26 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle scroll after navigation (when coming from another page)
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.getElementById(location.state.scrollTo)?.offsetTop || 0,
+          behavior: 'smooth',
+        });
+      }, 100); // Small delay to ensure DOM is ready
+    }
+  }, [location]);
+
   const navItems = [
-    { to: 'Signals-section', label: 'Signals' },
-    { to: 'how-it-works-section', label: 'How it Works' },
-    { to: 'pricing-section', label: 'Pricing' },
-    { to: 'faq-section', label: 'FAQs' },
-    { to: 'tips', label: 'Tips' },
-    { to: 'blog-section', label: 'Blog' },
-    { to: 'contact-section', label: 'Contact Us' },
+    { to: 'Signals-section', label: 'Signals', type: 'scroll' },
+    { to: 'how-it-works-section', label: 'How it Works', type: 'scroll' },
+    { to: 'pricing-section', label: 'Pricing', type: 'scroll' },
+    { to: 'faq-section', label: 'FAQs', type: 'scroll' },
+    { to: 'tips', label: 'Tips', type: 'scroll' },
+    { to: '/blog-section', label: 'Blog', type: 'route' },
+    { to: 'contact-section', label: 'Contact Us', type: 'scroll' },
   ];
 
   return (
@@ -50,21 +77,22 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <span>
             ✹ Limited-Time Offer: Huge Discount for the First 250 Subscribers!{' '}
-            <Link
+            <ScrollLink
               to="pricing-section"
               smooth={true}
               duration={500}
+              onClick={() => handleScrollLinkClick('pricing-section')}
               className="text-white font-semibold hover:text-gray-300 underline-offset-4 hover:underline cursor-pointer transition-colors duration-200"
             >
               View All Prices
-            </Link>
+            </ScrollLink>
           </span>
         </div>
       </aside>
 
       {/* Navigation Bar */}
       <nav
-        className={`py-4 transition-all duration-300 z-10 ${
+        className={`py-4 transition-all duration-300 z-100 ${
           isSticky
             ? 'fixed top-0 left-0 right-0 bg-white shadow-lg text-black'
             : 'bg-black text-white'
@@ -73,28 +101,45 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           {/* Logo and Links */}
           <div className="flex items-center gap-6">
-            <Link to="home-section" smooth={true} duration={500}>
+            <ScrollLink
+              to="home-section"
+              smooth={true}
+              duration={500}
+              onClick={() => handleScrollLinkClick('home-section')}
+            >
               <img
                 src="/assets/images/logo2.png"
                 alt="company_logo"
                 loading="lazy"
                 className="w-28 md:w-20 cursor-pointer"
               />
-            </Link>
+            </ScrollLink>
             <div className="hidden md:flex">
               <ul className="flex gap-6">
                 {navItems.map((item) => (
                   <li key={item.to}>
-                    <Link
-                      to={item.to}
-                      smooth={true}
-                      duration={500}
-                      className={`${
-                        isSticky ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
-                      } font-medium text-base cursor-pointer transition-colors duration-200 hover:scale-105 transform`}
-                    >
-                      {item.label}
-                    </Link>
+                    {item.type === 'scroll' ? (
+                      <ScrollLink
+                        to={item.to}
+                        smooth={true}
+                        duration={500}
+                        onClick={() => handleScrollLinkClick(item.to)}
+                        className={`${
+                          isSticky ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
+                        } font-medium text-base cursor-pointer transition-colors duration-200 hover:scale-105 transform`}
+                      >
+                        {item.label}
+                      </ScrollLink>
+                    ) : (
+                      <RouterLink
+                        to={item.to}
+                        className={`${
+                          isSticky ? 'text-black hover:text-gray-600' : 'text-white hover:text-gray-300'
+                        } font-medium text-base cursor-pointer transition-colors duration-200 hover:scale-105 transform`}
+                      >
+                        {item.label}
+                      </RouterLink>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -155,15 +200,28 @@ const Header = () => {
               <ul className="flex flex-col gap-4">
                 {navItems.map((item) => (
                   <li key={item.to}>
-                    <Link
-                      to={item.to}
-                      smooth={true}
-                      duration={500}
-                      onClick={toggleDrawer}
-                      className="text-black hover:text-gray-600 font-medium text-lg cursor-pointer transition-colors duration-200 hover:scale-105 transform"
-                    >
-                      {item.label}
-                    </Link>
+                    {item.type === 'scroll' ? (
+                      <ScrollLink
+                        to={item.to}
+                        smooth={true}
+                        duration={500}
+                        onClick={() => {
+                          handleScrollLinkClick(item.to);
+                          toggleDrawer();
+                        }}
+                        className="text-black hover:text-gray-600 font-medium text-lg cursor-pointer transition-colors duration-200 hover:scale-105 transform"
+                      >
+                        {item.label}
+                      </ScrollLink>
+                    ) : (
+                      <RouterLink
+                        to={item.to}
+                        onClick={toggleDrawer}
+                        className="text-black hover:text-gray-600 font-medium text-lg cursor-pointer transition-colors duration-200 hover:scale-105 transform"
+                      >
+                        {item.label}
+                      </RouterLink>
+                    )}
                   </li>
                 ))}
               </ul>
