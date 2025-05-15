@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { AiOutlineDown, AiOutlineUp } from "react-icons/ai"; // Importing arrow icons
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // shadcn Accordion
+import { ChevronDown } from "lucide-react"; // Lucide icon for the arrow
 
 const faqs = [
   {
@@ -63,44 +64,39 @@ const faqs = [
 ];
 
 const FAQs = () => {
-  const [openIndex, setOpenIndex] = useState(null);
-
-  const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="mb-10 text-[30px] sm:text-4xl font-semibold leading-tight text-2xl md:text-4xl text-black text-center">
+    <div className="max-w-4xl mx-auto p-6 bg-white">
+      <h2 className="mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
         Frequently Asked Questions
       </h2>
 
-      {faqs.map((faq, index) => (
-        <div key={index} className="mb-3 bg-gray-100 border-gray-300 rounded-lg">
-          {/* Question Section */}
-          <button
-            className="w-full flex justify-between items-center p-4 text-base sm:text-lg font-semibold text-gray-800 hover:bg-gray-200 transition-all"
-            onClick={() => toggleFAQ(index)}
+      <Accordion type="single" collapsible className="w-full space-y-2">
+        {faqs.map((faq, index) => (
+          <AccordionItem
+            key={index}
+            value={`item-${index}`}
+            className="border border-gray-200 rounded-lg bg-gray-50"
           >
-            <span className="flex-1 text-left">{faq.question}</span>
-            <span className={`flex items-center justify-center w-4 h-4 transition-transform duration-300 ${openIndex === index ? "rotate-180" : "rotate-0"}`}>
-              <AiOutlineDown size={24} className="icon-bold" />
-            </span>
-          </button>
-
-          {/* Answer Section */}
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              openIndex === index ? "max-h-screen opacity-100 p-4" : "max-h-0 opacity-0 p-0"
-            }`}
-          >
-            <p className="text-gray-700 text-sm sm:text-base">{faq.answer}</p>
-          </div>
-        </div>
-      ))}
+            <AccordionTrigger className="flex items-center justify-between w-full p-4 text-left text-base sm:text-lg font-semibold text-gray-800 hover:bg-gray-100 transition-colors">
+              <span>{faq.question}</span>
+            
+            </AccordionTrigger>
+            <AccordionContent className="p-4 text-gray-600 text-sm sm:text-base">
+              {Array.isArray(faq.answer) ? (
+                <ul className="list-disc pl-5 space-y-2">
+                  {faq.answer.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{faq.answer}</p>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 };
 
 export default FAQs;
-
