@@ -24,3 +24,76 @@
     }
 }
 
+/* Mobile-first approach */
+.home-section {
+    padding: 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .home-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .home-inner-container {
+    width: 100%;
+    max-width: 1200px; /* Limit max width for large screens */
+  }
+  
+  .home-title-heading {
+    font-size: clamp(1.5rem, 5vw, 2.5rem); /* Scalable font size */
+    line-height: 1.2;
+  }
+  
+  .home-subtitle-text {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+  }
+  
+  .home-button,
+  .home-button-secondary {
+    padding: 0.75rem 1.5rem;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    width: 100%;
+    max-width: 300px; /* Prevent buttons from being too wide on mobile */
+  }
+  
+  .home-content-item {
+    flex: 1 1 100%; /* Full width on mobile */
+    min-height: 200px;
+  }
+  
+  .signal_wrapper img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Tablet and larger screens */
+  @media (min-width: 768px) {
+    .home-section {
+      padding: 2rem;
+    }
+  
+    .home-button,
+    .home-button-secondary {
+      width: auto;
+    }
+  
+    .home-content-item {
+      flex: 1 1 45%; /* Two columns on tablet */
+    }
+  }
+  
+  /* Desktop screens */
+  @media (min-width: 1024px) {
+    .home-section {
+      padding: 3rem;
+    }
+  
+    .home-content-item {
+      flex: 1 1 30%; /* Three columns on desktop */
+    }
+  }

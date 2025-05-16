@@ -140,7 +140,7 @@ const router = createBrowserRouter([
         element: <Suspense fallback={<Loader />}><AdminProfile /></Suspense>,
       },
       {
-        path: 'blogs',
+        path: 'blog-manage',
         element: <Suspense fallback={<Loader />}><AdminBlogManager /></Suspense>,
       },
     ],

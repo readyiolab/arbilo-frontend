@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet';
+import { toast, Toaster } from 'react-hot-toast';
 import axios from 'axios';
-import { toast, Toaster } from 'react-hot-toast'; // Importing React Hot Toast
 import config from '@/config.js/config';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 const CTA = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +16,19 @@ const CTA = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Handle input change
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 },
+    },
+  };
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -20,25 +37,17 @@ const CTA = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Show pending toast
-    const toastId = toast.loading("Sending your message...");
+    const toastId = toast.loading('Sending your message...');
 
     try {
-      // Send POST request to the backend with form data
       const response = await axios.post(`${config.API_URL}/api/auth/contact-us`, formData);
-      
-      // Clear the form fields after successful submission
       setFormData({ name: '', email: '', message: '' });
-
-      // Update toast to success
       toast.success(response.data.message || 'Message sent successfully!', { id: toastId });
     } catch (error) {
-      // Update toast to error
       toast.error(error.response?.data?.message || 'Failed to send the message.', { id: toastId });
     } finally {
       setLoading(false);
@@ -47,63 +56,127 @@ const CTA = () => {
 
   return (
     <>
-      <section className="dark:bg-gray-900">
-        <Toaster /> {/* Toast container */}
-        <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
-          <h2 className="mb-4 text-[30px] font-semibold leading-tight text-2xl md:text-4xl text-black text-center">
-            Contact Us
-          </h2>
-          <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">
-            Have a question? We're here to help! Simply fill out the form below or send us an email, and we'll get back to you as soon as possible.
-          </p>
-          <form className="space-y-8" onSubmit={handleSubmit}>
-            <div>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                placeholder="Your name"
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                placeholder="Your Email"
-                required
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                id="message"
-                rows={6}
-                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Leave a message.."
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-black sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-              disabled={loading}
-            >
-              {loading ? 'Sending message...' : 'Send message'}
-            </button>
-
-            <p className="text-center mt-4">
-              You can also reach us directly at{' '}
-              <span className="text-black hover:underline cursor-pointer">hello@arbilo.com</span>
+      <Helmet>
+        <title>ArbiPair Contact Us</title>
+        <meta
+          name="description"
+          content="Contact ArbiPair for support or inquiries about our crypto arbitrage tools and services."
+        />
+        <meta
+          name="keywords"
+          content="ArbiPair, contact us, crypto arbitrage, support"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="ArbiPair Contact Us" />
+        <meta
+          property="og:description"
+          content="Get in touch with ArbiPair for any questions or support regarding our crypto arbitrage platform."
+        />
+        <meta property="og:image" content="/assets/images/logo2.png" />
+        <meta property="og:url" content="https://yourwebsite.com/contact" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Contact Us",
+            "description": "Contact page for ArbiPair's crypto arbitrage tools and services.",
+            "publisher": {
+              "@type": "Organization",
+              "name": "ArbiPair",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "/assets/images/logo2.png",
+              },
+            },
+          })}
+        </script>
+      </Helmet>
+      <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
+        <Toaster />
+        <div className="mx-auto max-w-screen-md">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-8 sm:mb-12"
+          >
+            <h2 className="mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
+              Contact Us
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-gray-600">
+              Have a question? We're here to help! Simply fill out the form below or send us an email, and we'll get back to you as soon as possible.
             </p>
-          </form>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-8"
+          >
+            <motion.form
+              onSubmit={handleSubmit}
+              className="space-y-6"
+              variants={sectionVariants}
+            >
+              <motion.div variants={sectionVariants}>
+                <Input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                  required
+                  className="w-full text-sm text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </motion.div>
+              <motion.div variants={sectionVariants}>
+                <Input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Your Email"
+                  required
+                  className="w-full text-sm text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </motion.div>
+              <motion.div variants={sectionVariants}>
+                <Textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={6}
+                  placeholder="Leave a message..."
+                  required
+                  className="w-full text-sm text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </motion.div>
+              <motion.div variants={sectionVariants} className="text-center">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="py-3 px-5 text-sm font-medium text-white bg-black hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 disabled:opacity-50"
+                >
+                  {loading ? 'Sending message...' : 'Send message'}
+                </Button>
+              </motion.div>
+              <motion.p
+                variants={sectionVariants}
+                className="text-center text-sm sm:text-base text-gray-600"
+              >
+                You can also reach us directly at{' '}
+                <a
+                  href="mailto:hello@arbilo.com"
+                  className="text-blue-600 hover:underline"
+                  aria-label="Email ArbiPair support"
+                >
+                  hello@arbilo.com
+                </a>
+              </motion.p>
+            </motion.form>
+          </motion.div>
         </div>
       </section>
     </>

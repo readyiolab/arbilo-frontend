@@ -32,6 +32,7 @@ const AdminLayout = () => {
     { path: '/admin-dashboard/users', icon: <IoMdPeople size={20} />, label: 'Users' },
     { path: '/admin-dashboard/statistics', icon: <IoMdStats size={20} />, label: 'Create ' },
     { path: '/admin-dashboard/profile', icon: <IoMdPerson size={20} />, label: 'Profile' },
+    { path: '/admin-dashboard/blog-manage', icon: <IoMdPerson size={20} />, label: 'Blog' },
   ];
 
   if (!admin.user) {
