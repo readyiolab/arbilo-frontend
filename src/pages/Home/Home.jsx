@@ -37,85 +37,83 @@ const Home = () => {
         <meta property="og:url" content="https://yourwebsite.com" />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
-      <section id="home-section" className="home-section hero-section">
-        <div className="home-container px-4 md:px-8">
-          <div className="home-inner-container w-full mx-auto">
-            <header className="home-header pb-14 pt-8 md:pb-20 md:px-28">
-              <div className="home-title text-center">
-                <motion.div
-                  className="home-title-inner w-full max-w-3xl mx-auto"
-                  initial={{ opacity: 0, y: -50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                  <motion.div
-                    className="home-title-text mt-0 ml-0 mr-0 m-6"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                  >
-                    <h1 className="home-title-heading font-semibold leading-tight custom-font-size text-black">
-                      Boost Your Crypto Profits &amp; Like Never Before
-                      <br />
-                    </h1>
-                  </motion.div>
-                  <motion.div
-                    className="home-subtitle w-full max-w-6xl mx-auto"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                  >
-                    <div className="home-subtitle-text text-lg md:text-xl text-black">
-                      Powered by the World’s First Pair-Based Arbitrage
-                      Algorithm
-                    </div>
-                  </motion.div>
-                </motion.div>
+      <section id="home-section" class="home-section hero-section bg-white">
+  <div class="home-container px-4 sm:px-6 md:px-8 lg:px-12">
+    <div class="home-inner-container w-full max-w-7xl mx-auto">
+      <header class="home-header py-12 sm:py-16 md:py-20  ">
+        <div class="home-title text-center">
+          <motion.div
+            class="home-title-inner w-full max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.div
+              class="home-title-text mt-0 mb-6"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            >
+              <h1 class="home-title-heading font-semibold leading-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-black">
+                Boost Your Crypto Profits Like Never Before
+              </h1>
+            </motion.div>
+            <motion.div
+              class="home-subtitle w-full max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            >
+              <div class="home-subtitle-text text-base sm:text-lg md:text-xl lg:text-2xl text-black">
+                Powered by the World’s First Pair-Based Arbitrage Algorithm
               </div>
-              <motion.div
-                className="home-buttons mb-0 ml-0 mr-0 m-12"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-              >
-                <div className="home-buttons-container gap-3 flex-wrap items-center flex justify-center">
-                  <motion.div
-                    className="home-button-wrapper max-w-full-mobile-landscape"
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      to="how-it-works-section"
-                      smooth={true}
-                      duration={500}
-                      className="cursor-pointer home-button gap-2 border border-black bg-black text-white text-center whitespace-nowrap rounded-md justify-center items-center py-4 px-7 font-medium transition-all flex shadow-sm text-lg hover:bg-gray-800 hover:border-gray-800"
-                    >
-                      <div>Profitable Unique Signals</div>
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    className="home-button-wrapper max-w-full-mobile-landscape"
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      to="pricing-section"
-                      smooth={true}
-                      duration={500}
-                      className="home-button-secondary cursor-pointer gap-2 border border-gray-800 bg-white text-gray-800 text-center whitespace-nowrap rounded-md justify-center items-center py-4 px-7 font-medium transition-all flex shadow-sm text-lg relative hover:bg-gray-800 hover:text-white hover:border-gray-800"
-                    >
-                      <div className="flex items-center">
-                        Simple and Low Pricing
-                      </div>
-                      <span className="bg-black text-white text-xs font-bold rounded-sm px-2 py-1">
-                        60% off
-                      </span>
-                    </Link>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </header>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+        <motion.div
+          class="home-buttons mb-8 mt-6 sm:mt-8 md:mt-12"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+        >
+          <div class="home-buttons-container flex flex-col sm:flex-row gap-4 sm:gap-3 items-center justify-center">
+            <motion.div
+              class="home-button-wrapper w-full sm:w-auto"
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                to="how-it-works-section"
+                smooth={true}
+                duration={500}
+                class="cursor-pointer home-button gap-2 border border-black bg-black text-white text-center rounded-md justify-center items-center py-3 sm:py-4 px-6 sm:px-7 font-medium transition-all flex shadow-sm text-base sm:text-lg w-full sm:w-auto hover:bg-gray-800 hover:border-gray-800"
+              >
+                <div>Profitable Unique Signals</div>
+              </Link>
+            </motion.div>
+            <motion.div
+              class="home-button-wrapper w-full sm:w-auto"
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                to="pricing-section"
+                smooth={true}
+                duration={500}
+                class="home-button-secondary cursor-pointer gap-2 border border-gray-800 bg-white text-gray-800 text-center rounded-md justify-center items-center py-3 sm:py-4 px-6 sm:px-7 font-medium transition-all flex shadow-sm text-base sm:text-lg w-full sm:w-auto hover:bg-gray-800 hover:text-white hover:border-gray-800 relative"
+              >
+                <div class="flex items-center justify-center">
+                  Simple and Low Pricing
+                </div>
+                <span class="bg-black text-white text-xs font-bold rounded-sm px-2 py-1 absolute -top-2 -right-2 sm:static sm:ml-2">
+                  60% off
+                </span>
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+      </header>
+    </div>
+  </div>
+</section>
 
       <section className="home-section-included arbitrage-section">
         <div className="home-container px-4 md:px-8">
