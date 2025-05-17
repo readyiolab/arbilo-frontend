@@ -1,33 +1,64 @@
-import config from '@/config.js/config';
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import { PlusCircle, Pencil, Trash2, ImagePlus, FileText, Clock, Tag, User, Check, AlertTriangle } from 'lucide-react';
+import config from "@/config.js/config";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import {
+  PlusCircle,
+  Pencil,
+  Trash2,
+  ImagePlus,
+  FileText,
+  Clock,
+  Tag,
+  User,
+  Check,
+  AlertTriangle,
+} from "lucide-react";
 
 const AdminBlogManager = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [form, setForm] = useState({
-    title: '',
-    excerpt: '',
-    content: '',
-    category: '',
-    author: '',
-    author_bio: '',
-    status: 'draft',
-    read_time: '',
-    tags: '',
+    title: "",
+    excerpt: "",
+    content: "",
+    category: "",
+    author: "",
+    author_bio: "",
+    status: "draft",
+    read_time: "",
+    tags: "",
     is_featured: false,
     image: null,
   });
@@ -38,23 +69,25 @@ const AdminBlogManager = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState(null);
-  const [activeTab, setActiveTab] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch blogs on component mount
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const response = await fetch(`${config.API_URL}/api/blogs`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
         });
-        if (!response.ok) throw new Error('Failed to fetch blogs');
+        if (!response.ok) throw new Error("Failed to fetch blogs");
         const data = await response.json();
-        console.log('Fetched blogs:', data);
+        console.log("Fetched blogs:", data);
         setBlogs(Array.isArray(data.blogs) ? data.blogs : []);
         setLoading(false);
       } catch (err) {
-        console.error('Fetch blogs error:', err);
+        console.error("Fetch blogs error:", err);
         setError(err.message);
         setLoading(false);
       }
@@ -65,7 +98,7 @@ const AdminBlogManager = () => {
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === 'checkbox' ? checked : value });
+    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
   // Handle image upload and preview
@@ -96,11 +129,19 @@ const AdminBlogManager = () => {
 
   // Validate form before submission
   const validateForm = () => {
-    const requiredFields = ['title', 'excerpt', 'content', 'category', 'author'];
+    const requiredFields = [
+      "title",
+      "excerpt",
+      "content",
+      "category",
+      "author",
+    ];
     const errors = [];
     requiredFields.forEach((field) => {
       if (!form[field].trim()) {
-        errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+        errors.push(
+          `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
+        );
       }
     });
     return errors;
@@ -111,7 +152,7 @@ const AdminBlogManager = () => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (validationErrors.length > 0) {
-      setError(validationErrors.join(', '));
+      setError(validationErrors.join(", "));
       return;
     }
 
@@ -119,50 +160,63 @@ const AdminBlogManager = () => {
       setLoading(true);
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
-        if (key === 'tags') {
-          const tagsArray = value ? value.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
-          formData.append(key, JSON.stringify(tagsArray));
-        } else if (key === 'image' && value) {
+        if (key === "tags") {
+          const tagsArray = value
+            ? value
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag)
+            : [];
+          tagsArray.forEach((tag) => formData.append("tags[]", tag));
+        } else if (key === "image" && value) {
           formData.append(key, value);
+        } else if (key === "is_featured") {
+          formData.append(key, value ? "true" : "false");
         } else {
-          formData.append(key, value || '');
+          formData.append(key, value || "");
         }
       });
 
-      console.log('FormData entries:');
+      console.log("FormData entries:");
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
 
-      const url = editingId ? `${config.API_URL}/api/blogs/${editingId}` : `${config.API_URL}/api/blogs`;
-      const method = editingId ? 'PUT' : 'POST';
+      const url = editingId
+        ? `${config.API_URL}/api/blogs/${editingId}`
+        : `${config.API_URL}/api/blogs`;
+      const method = editingId ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
-        headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
         body: formData,
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Server error response:', errorData);
+        console.error("Server error response:", errorData);
         throw new Error(errorData.message || JSON.stringify(errorData.errors));
       }
 
       const data = await response.json();
-      console.log('New blog from POST:', data.blog);
+      console.log("New blog from POST:", data.blog);
 
       if (editingId) {
-        setBlogs(blogs.map(blog => (blog.id === editingId ? data.blog : blog)));
-        setSuccess('Blog successfully updated!');
+        setBlogs(
+          blogs.map((blog) => (blog.id === editingId ? data.blog : blog))
+        );
+        setSuccess("Blog successfully updated!");
       } else {
         setBlogs([...blogs, data.blog]);
-        setSuccess('New blog successfully created!');
+        setSuccess("New blog successfully created!");
       }
 
       resetForm();
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.error("Fetch error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -172,21 +226,21 @@ const AdminBlogManager = () => {
   // Handle edit button click
   const handleEdit = (blog) => {
     setForm({
-      title: blog.title || '',
-      excerpt: blog.excerpt || '',
-      content: blog.content || '',
-      category: blog.category || '',
-      author: blog.author || '',
-      author_bio: blog.author_bio || '',
-      status: blog.status || 'draft',
-      read_time: blog.read_time || '',
-      tags: blog.tags ? blog.tags.join(', ') : '',
+      title: blog.title || "",
+      excerpt: blog.excerpt || "",
+      content: blog.content || "",
+      category: blog.category || "",
+      author: blog.author || "",
+      author_bio: blog.author_bio || "",
+      status: blog.status || "draft",
+      read_time: blog.read_time || "",
+      tags: blog.tags ? blog.tags.join(", ") : "",
       is_featured: blog.is_featured || false,
       image: null,
     });
     setEditingId(blog.id);
     setImagePreview(blog.image || null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Open delete confirmation dialog
@@ -201,17 +255,22 @@ const AdminBlogManager = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${config.API_URL}/api/blogs/${blogToDelete.id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` },
-      });
+      const response = await fetch(
+        `${config.API_URL}/api/blogs/${blogToDelete.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to delete blog');
+      if (!response.ok) throw new Error("Failed to delete blog");
 
-      setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id));
-      setSuccess(`"${blogToDelete.title || 'Blog'}" has been deleted.`);
+      setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id));
+      setSuccess(`"${blogToDelete.title || "Blog"}" has been deleted.`);
     } catch (err) {
-      console.error('Delete error:', err);
+      console.error("Delete error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -223,15 +282,15 @@ const AdminBlogManager = () => {
   // Reset form to initial state
   const resetForm = () => {
     setForm({
-      title: '',
-      excerpt: '',
-      content: '',
-      category: '',
-      author: '',
-      author_bio: '',
-      status: 'draft',
-      read_time: '',
-      tags: '',
+      title: "",
+      excerpt: "",
+      content: "",
+      category: "",
+      author: "",
+      author_bio: "",
+      status: "draft",
+      read_time: "",
+      tags: "",
       is_featured: false,
       image: null,
     });
@@ -252,17 +311,23 @@ const AdminBlogManager = () => {
   }, [success, error]);
 
   // Filter blogs based on tab and search term
-  console.log('Blogs state:', blogs);
+  console.log("Blogs state:", blogs);
   const filteredBlogs = blogs
-    .filter(blog => {
-      const status = typeof blog.status === 'string' ? blog.status.toLowerCase().trim() : '';
-      console.log(`Blog ID: ${blog.id}, Status: ${blog.status}, Normalized: ${status}`);
-      return activeTab === 'all' || status === activeTab;
+    .filter((blog) => {
+      const status =
+        typeof blog.status === "string" ? blog.status.toLowerCase().trim() : "";
+      console.log(
+        `Blog ID: ${blog.id}, Status: ${blog.status}, Normalized: ${status}`
+      );
+      return activeTab === "all" || status === activeTab;
     })
-    .filter(blog => {
-      const title = typeof blog.title === 'string' ? blog.title.toLowerCase() : '';
-      const category = typeof blog.category === 'string' ? blog.category.toLowerCase() : '';
-      const author = typeof blog.author === 'string' ? blog.author.toLowerCase() : '';
+    .filter((blog) => {
+      const title =
+        typeof blog.title === "string" ? blog.title.toLowerCase() : "";
+      const category =
+        typeof blog.category === "string" ? blog.category.toLowerCase() : "";
+      const author =
+        typeof blog.author === "string" ? blog.author.toLowerCase() : "";
       const search = searchTerm.toLowerCase().trim();
       return (
         title.includes(search) ||
@@ -270,15 +335,22 @@ const AdminBlogManager = () => {
         author.includes(search)
       );
     });
-  console.log('Filtered blogs for tab', activeTab, ':', filteredBlogs);
+  console.log("Filtered blogs for tab", activeTab, ":", filteredBlogs);
 
   // Render status badge
   const getStatusBadge = (status) => {
-    const normalizedStatus = typeof status === 'string' ? status.toLowerCase() : '';
-    if (normalizedStatus === 'published') {
-      return <Badge className="bg-green-500 hover:bg-green-600">Published</Badge>;
+    const normalizedStatus =
+      typeof status === "string" ? status.toLowerCase() : "";
+    if (normalizedStatus === "published") {
+      return (
+        <Badge className="bg-green-500 hover:bg-green-600">Published</Badge>
+      );
     }
-    return <Badge variant="outline" className="text-amber-500 border-amber-500">Draft</Badge>;
+    return (
+      <Badge variant="outline" className="text-amber-500 border-amber-500">
+        Draft
+      </Badge>
+    );
   };
 
   // Show loading screen during initial fetch
@@ -295,14 +367,18 @@ const AdminBlogManager = () => {
 
   return (
     <div className="mx-auto py-10 px-4 max-w-7xl">
-      <h1 className="text-3xl font-bold tracking-tight mb-6 text-center text-black">Blog Management</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-6 text-center text-black">
+        Blog Management
+      </h1>
 
       {/* Success and Error Alerts */}
       {success && (
         <Alert className="mb-6 bg-green-50 border-green-200">
           <Check className="h-4 w-4 text-green-500" />
           <AlertTitle className="text-green-800">Success</AlertTitle>
-          <AlertDescription className="text-green-700">{success}</AlertDescription>
+          <AlertDescription className="text-green-700">
+            {success}
+          </AlertDescription>
         </Alert>
       )}
       {error && (
@@ -316,9 +392,13 @@ const AdminBlogManager = () => {
       {/* Blog Form */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>{editingId ? 'Edit Blog Post' : 'Create New Blog Post'}</CardTitle>
+          <CardTitle>
+            {editingId ? "Edit Blog Post" : "Create New Blog Post"}
+          </CardTitle>
           <CardDescription>
-            {editingId ? 'Update the details of your blog post' : 'Fill in the details to create a new blog post'}
+            {editingId
+              ? "Update the details of your blog post"
+              : "Fill in the details to create a new blog post"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -398,7 +478,10 @@ const AdminBlogManager = () => {
                 </div>
                 <div className="flex flex-col space-y-2">
                   <Label htmlFor="status">Publication Status</Label>
-                  <Select value={form.status} onValueChange={handleStatusChange}>
+                  <Select
+                    value={form.status}
+                    onValueChange={handleStatusChange}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
@@ -446,11 +529,13 @@ const AdminBlogManager = () => {
             </div>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="image" className="block mb-2">Featured Image</Label>
+                <Label htmlFor="image" className="block mb-2">
+                  Featured Image
+                </Label>
                 <div className="flex items-center gap-4">
                   <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
                     <ImagePlus className="h-5 w-5 text-gray-500" />
-                    <span>{form.image ? 'Change Image' : 'Upload Image'}</span>
+                    <span>{form.image ? "Change Image" : "Upload Image"}</span>
                     <Input
                       id="image"
                       type="file"
@@ -503,12 +588,10 @@ const AdminBlogManager = () => {
             {loading ? (
               <>
                 <span className="animate-spin mr-2">⟳</span>
-                {editingId ? 'Updating...' : 'Creating...'}
+                {editingId ? "Updating..." : "Creating..."}
               </>
             ) : (
-              <>
-                {editingId ? 'Update Blog Post' : 'Create Blog Post'}
-              </>
+              <>{editingId ? "Update Blog Post" : "Create Blog Post"}</>
             )}
           </Button>
         </CardFooter>
@@ -529,7 +612,11 @@ const AdminBlogManager = () => {
                 aria-label="Search blogs"
               />
             </div>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full sm:w-auto"
+            >
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="published">Published</TabsTrigger>
@@ -542,9 +629,13 @@ const AdminBlogManager = () => {
           {filteredBlogs.length === 0 ? (
             <div className="text-center py-8">
               <FileText className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-              <h3 className="text-lg font-medium text-gray-600">No blog posts found</h3>
+              <h3 className="text-lg font-medium text-gray-600">
+                No blog posts found
+              </h3>
               <p className="text-gray-500 mt-2">
-                {searchTerm ? 'Try a different search term' : 'Create your first blog post by filling the form above'}
+                {searchTerm
+                  ? "Try a different search term"
+                  : "Create your first blog post by filling the form above"}
               </p>
             </div>
           ) : (
@@ -554,16 +645,20 @@ const AdminBlogManager = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between py-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-medium">{blog.title || 'Untitled'}</h3>
+                        <h3 className="text-lg font-medium">
+                          {blog.title || "Untitled"}
+                        </h3>
                         {blog.is_featured && (
-                          <Badge className="bg-purple-500 hover:bg-purple-600">Featured</Badge>
+                          <Badge className="bg-purple-500 hover:bg-purple-600">
+                            Featured
+                          </Badge>
                         )}
                         {getStatusBadge(blog.status)}
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
                         <div className="flex items-center gap-1">
                           <Tag className="h-3.5 w-3.5" />
-                          <span>{blog.category || 'No Category'}</span>
+                          <span>{blog.category || "No Category"}</span>
                         </div>
                         {blog.author && (
                           <div className="flex items-center gap-1">
@@ -614,7 +709,9 @@ const AdminBlogManager = () => {
           <DialogHeader>
             <DialogTitle>Delete Blog Post</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{blogToDelete?.title || 'this blog'}"? This action cannot be undone.
+              Are you sure you want to delete "
+              {blogToDelete?.title || "this blog"}"? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -630,7 +727,7 @@ const AdminBlogManager = () => {
               onClick={handleDelete}
               disabled={loading}
             >
-              {loading ? 'Deleting...' : 'Delete'}
+              {loading ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

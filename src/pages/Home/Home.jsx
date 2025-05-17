@@ -40,7 +40,7 @@ const Home = () => {
         <meta property="og:url" content="https://yourwebsite.com" />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
-      <section id="home-section" class="home-section hero-section bg-white min-h-screen">
+      <section id="home-section" class="home-section hero-section bg-white ">
         <div class="home-container px-4 sm:px-6 md:px-8 lg:px-12">
           <div class="home-inner-container w-full max-w-7xl mx-auto">
             <header class="home-header py-12 sm:py-16 md:py-20  ">
