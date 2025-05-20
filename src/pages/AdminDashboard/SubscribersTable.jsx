@@ -276,6 +276,18 @@ const SubscribersTable = () => {
     `);
   };
 
+  // Show full-screen loader when loading
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading subscribers...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
       <Toaster position="top-center" reverseOrder={false} />
@@ -360,13 +372,7 @@ const SubscribersTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan="4" className="text-center py-4 text-gray-500">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : error ? (
+            {error ? (
               <TableRow>
                 <TableCell colSpan="4" className="text-center py-4 text-red-600">
                   {error}

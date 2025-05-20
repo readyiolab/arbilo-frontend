@@ -65,6 +65,7 @@ const UserTable = () => {
           return;
         }
 
+        setLoading(true);
         const response = await axios.get(`${config.API_URL}/api/admin/users`, {
           headers: {
             'Content-Type': 'application/json',
@@ -79,6 +80,8 @@ const UserTable = () => {
         }
       } catch (error) {
         toast.error(error.response?.data?.message || 'Error fetching users');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -208,6 +211,18 @@ const UserTable = () => {
     setSelectedUser(null);
     setFormData({ email: '', subscription_type: '', start_date: null });
   }, []);
+
+  // Show full-screen loader when loading
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading users...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded-lg p-4">

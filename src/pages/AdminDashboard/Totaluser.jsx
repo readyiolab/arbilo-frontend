@@ -64,8 +64,16 @@ const Totaluser = () => {
     },
   ];
 
+  // Show full-screen loader when loading
   if (loading) {
-    return <div className="w-full h-24 flex items-center justify-center">Loading statistics...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading user statistics...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
