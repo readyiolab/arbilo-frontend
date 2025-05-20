@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
@@ -11,7 +11,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"; // Add Button for consistency
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 // Define validation schema with zod
 const formSchema = z.object({
@@ -48,6 +49,10 @@ export default function Login() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/", { state: { scrollTo: "pricing-section" } });
   };
 
   const onSubmit = async (data) => {
@@ -209,12 +214,12 @@ export default function Login() {
 
             <p className="text-center text-sm text-gray-600">
               Don't have an account?{" "}
-              <NavLink
-                to="/signup"
+              <button
+                onClick={handleRegisterClick}
                 className="font-semibold text-black hover:text-gray-800 hover:underline"
               >
                 Register here
-              </NavLink>
+              </button>
             </p>
           </div>
         </div>

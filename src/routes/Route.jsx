@@ -1,46 +1,35 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Loader from "../components/Loader/Loader";
 import ProtectedRoute from "../ProtectedRoute";
 import AdminProtectedRoute from "../AdminProtectedRoute";
-import AdminProfile from "@/pages/AdminProfile/AdminProfile";
-import SubscribersTable from "@/pages/AdminDashboard/SubscribersTable";
-import NewsletterUnsubscribe from "@/pages/NewsletterFile/NewsletterUnsubscribe";
-import NewsletterConfirm from "@/pages/NewsletterFile/NewsletterConfirm";
 
+// Lazy-loaded components
 const Layout = lazy(() => import("../layout/Layout/Layout"));
-const DashboardLayout = lazy(() =>
-  import("../layout/DashboardLayout/DashboardLayout")
-);
+const DashboardLayout = lazy(() => import("../layout/DashboardLayout/DashboardLayout"));
 const Home = lazy(() => import("../pages/Home/Home"));
 const Login = lazy(() => import("../pages/Login/Login"));
 const Signup = lazy(() => import("../pages/Signup/Signup"));
-const ForgotPassword = lazy(() =>
-  import("../pages/ForgotPassword/ForgotPassword")
-);
-const ResetPassword = lazy(() =>
-  import("../pages/ResetPassword/ResetPassword")
-);
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword/ForgotPassword"));
+const ResetPassword = lazy(() => import("../pages/ResetPassword/ResetPassword"));
 const DashBoard = lazy(() => import("../pages/DashBoard/DashBoard"));
 const Profile = lazy(() => import("../pages/Profile/Profile"));
 const Error404 = lazy(() => import("../pages/Error404/Error404"));
 const PrivacyPolicy = lazy(() => import("../pages/Home/PrivacyPolicy"));
-const TermsAndConditions = lazy(() =>
-  import("../pages/Home/TermsAndConditions")
-);
+const TermsAndConditions = lazy(() => import("../pages/Home/TermsAndConditions"));
 const EarningDisclaimer = lazy(() => import("../pages/Home/EarningDisclaimer"));
 const AdminLayout = lazy(() => import("../layout/AdminLayout/AdminLayout"));
 const AdminLogin = lazy(() => import("../pages/AdminLogin/AdminLogin"));
 const UserTable = lazy(() => import("../pages/AdminDashboard/UserTable"));
-const CreateCredential = lazy(() =>
-  import("../pages/CreateCredential/CreateCredential")
-);
+const CreateCredential = lazy(() => import("../pages/CreateCredential/CreateCredential"));
 const Totaluser = lazy(() => import("../pages/AdminDashboard/Totaluser"));
 const BlogList = lazy(() => import("../pages/Blog/BlogSection"));
 const BlogDetail = lazy(() => import("../pages/Blog/BlogDetail"));
-const AdminBlogManager = lazy(() =>
-  import("../pages/AdminBlogManager/AdminBlogManager")
-);
+const AdminBlogManager = lazy(() => import("../pages/AdminBlogManager/AdminBlogManager"));
+const AdminProfile = lazy(() => import("../pages/AdminProfile/AdminProfile"));
+const SubscribersTable = lazy(() => import("../pages/AdminDashboard/SubscribersTable"));
+const NewsletterUnsubscribe = lazy(() => import("../pages/NewsletterFile/NewsletterUnsubscribe"));
+const NewsletterConfirm = lazy(() => import("../pages/NewsletterFile/NewsletterConfirm"));
 
 const router = createBrowserRouter([
   {
@@ -122,7 +111,7 @@ const router = createBrowserRouter([
             <BlogDetail />
           </Suspense>
         ),
-      }, // Updated to use slug
+      },
     ],
   },
   {
@@ -135,11 +124,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/signup",
-    element: (
-      <Suspense fallback={<Loader />}>
-        <Signup />
-      </Suspense>
-    ),
+    loader: () => redirect("/", { state: { scrollTo: "pricing-section" } }),
   },
   {
     path: "/forgot-password",
@@ -198,14 +183,6 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "*",
-    element: (
-      <Suspense fallback={<Loader />}>
-        <Error404 />
-      </Suspense>
-    ),
-  },
-  {
     path: "/privacy-policy",
     element: (
       <Suspense fallback={<Loader />}>
@@ -230,21 +207,21 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "newsletter/confirm",
+    path: "/newsletter/confirm",
     element: (
       <Suspense fallback={<Loader />}>
         <NewsletterConfirm />
       </Suspense>
     ),
-  }, // New
+  },
   {
-    path: "newsletter/unsubscribe",
+    path: "/newsletter/unsubscribe",
     element: (
       <Suspense fallback={<Loader />}>
         <NewsletterUnsubscribe />
       </Suspense>
     ),
-  }, 
+  },
   {
     path: "/admin-login",
     element: (
@@ -312,6 +289,14 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Error404 />
+      </Suspense>
+    ),
   },
 ]);
 

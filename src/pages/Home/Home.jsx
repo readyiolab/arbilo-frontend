@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Pricing from "./Pricing";
 import FAQs from "./FAQs";
 import CTA from "./CTA";
-import Scroll from "@/components/Scroll/Scroll";
 import Tips from "./Tips";
 import { Helmet } from "react-helmet";
 import ArbiPairSection from "./ArbiPairSection";
@@ -213,7 +212,7 @@ const Home = () => {
                   </div>
                   <div className="w-full signal_wrapper max-w-4xl mx-auto">
                     <motion.img
-                      src="/assets/images/arbitrack.png"
+                      src="/assets/images/arbitrack.webp"
                       alt="ArbiTrack Signals"
                       className="mx-auto  max-w-full h-auto"
                       initial={{ opacity: 0, y: 20 }}
@@ -242,7 +241,7 @@ const Home = () => {
         <CTA />
       </section>
 
-      <Scroll />
+      
     </>
   );
 };

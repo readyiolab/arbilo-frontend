@@ -3,26 +3,29 @@ import { Link as ScrollLink } from "react-scroll";
 import { useState, useEffect } from "react";
 import { UserPlusIcon, LogInIcon } from "lucide-react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
-import { Transition } from "@headlessui/react";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Header = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
   const handleLoginClick = () => {
     navigate("/login");
-    setIsDrawerOpen(false);
+    setIsSheetOpen(false);
   };
 
   const handleSignupClick = () => {
-    navigate("/signup");
-    setIsDrawerOpen(false);
+    navigate("/", { state: { scrollTo: "pricing-section" } });
+    setIsSheetOpen(false);
   };
 
   const handleScrollLinkClick = (to) => {
@@ -34,7 +37,7 @@ const Header = () => {
         behavior: "smooth",
       });
     }
-    setIsDrawerOpen(false);
+    setIsSheetOpen(false);
   };
 
   useEffect(() => {
@@ -46,7 +49,14 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    if (location.state?.scrollTo) {
+    // Scroll to top on route change (e.g., for Blog page)
+    if (!location.state?.scrollTo) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } else {
+      // Handle scroll to specific section if specified in state
       setTimeout(() => {
         window.scrollTo({
           top: document.getElementById(location.state.scrollTo)?.offsetTop || 0,
@@ -63,7 +73,7 @@ const Header = () => {
     { to: "faq-section", label: "FAQs", type: "scroll" },
     { to: "tips", label: "Tips", type: "scroll" },
     { to: "/blog-section", label: "Blog", type: "route" },
-    { to: "contact-section", label: "Contact ", type: "scroll" },
+    { to: "contact-section", label: "Contact", type: "scroll" },
   ];
 
   return (
@@ -86,7 +96,7 @@ const Header = () => {
             aria-label="Go to home section"
           >
             <img
-              src="/assets/images/logo2.png"
+              src="/assets/images/logo2.webp"
               alt="ArbiPair Company Logo"
               loading="lazy"
               className="w-28 md:w-20 cursor-pointer"
@@ -154,101 +164,97 @@ const Header = () => {
               Log In <LogInIcon className="w-4 sm:w-5 h-4 sm:h-5" />
             </button>
           </div>
-          <button
-            className="md:hidden"
-            onClick={toggleDrawer}
-            aria-label={isDrawerOpen ? "Close menu" : "Open menu"}
-          >
-            {isDrawerOpen ? (
-              <XMarkIcon
-                className={`w-6 h-6 ${isSticky ? "text-white" : "text-black"}`}
-              />
-            ) : (
-              <Bars3Icon
-                className={`w-6 h-6 ${isSticky ? "text-white" : "text-black"}`}
-              />
-            )}
-          </button>
+
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <button
+                className="flex items-center justify-center"
+                aria-label="Open menu"
+              >
+                <Bars3Icon
+                  className={`w-6 h-6 ${
+                    isSticky ? "text-white" : "text-black"
+                  }`}
+                />
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="w-full max-w-sm p-0 border-none"
+            >
+              <div className="flex flex-col h-full">
+                <SheetHeader className="p-6 border-b">
+                  <SheetTitle className="text-xl font-bold">
+                    <img
+                      src="/assets/images/logo2.webp"
+                      alt="ArbiPair Company Logo"
+                      loading="lazy"
+                      className="w-28 md:w-20 cursor-pointer"
+                    />
+                  </SheetTitle>
+                </SheetHeader>
+
+                <div className="flex-1 overflow-auto py-6 px-6">
+                  <nav className="flex flex-col space-y-6">
+                    {navItems.map((item) => (
+                      <div
+                        key={item.to}
+                        className="border-b border-gray-100 pb-6 last:border-0"
+                      >
+                        {item.type === "scroll" ? (
+                          <ScrollLink
+                            to={item.to}
+                            smooth={true}
+                            duration={500}
+                            onClick={() => {
+                              handleScrollLinkClick(item.to);
+                              setIsSheetOpen(false);
+                            }}
+                            className="text-black hover:text-gray-600 font-medium text-lg block"
+                            aria-label={`Go to ${item.label} section`}
+                          >
+                            {item.label}
+                          </ScrollLink>
+                        ) : (
+                          <RouterLink
+                            to={item.to}
+                            onClick={() => setIsSheetOpen(false)}
+                            className="text-black hover:text-gray-600 font-medium text-lg block"
+                            aria-label={`Go to ${item.label} page`}
+                          >
+                            {item.label}
+                          </RouterLink>
+                        )}
+                      </div>
+                    ))}
+                  </nav>
+                </div>
+
+                <div className="p-6 mt-auto border-t">
+                  <div className="flex flex-col gap-4">
+                    <button
+                      onClick={handleSignupClick}
+                      className="bg-white text-black px-4 py-3 rounded-md flex items-center justify-center gap-2 hover:bg-gray-100 transition-all duration-200 text-base font-semibold border border-black w-full"
+                      aria-label="Sign up for ArbiPair"
+                      rel="nofollow"
+                    >
+                      Sign up <UserPlusIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={handleLoginClick}
+                      className="bg-black text-white px-4 py-3 rounded-md flex items-center justify-center gap-2 hover:bg-gray-800 transition-all duration-200 text-base font-semibold w-full"
+                      aria-label="Log in to ArbiPair"
+                      rel="nofollow"
+                    >
+                      Log In <LogInIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-
-      {/* Mobile Drawer */}
-      <Transition
-        show={isDrawerOpen}
-        enter="transition-transform duration-300 ease-in-out"
-        enterFrom="-translate-x-full"
-        enterTo="translate-x-0"
-        leave="transition-transform duration-300 ease-in-out"
-        leaveFrom="translate-x-0"
-        leaveTo="-translate-x-full"
-        as="div"
-        className="fixed inset-0 z-50 md:hidden"
-      >
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75"
-          onClick={toggleDrawer}
-          aria-hidden="true"
-        ></div>
-        <div className="fixed left-0 top-0 w-80 sm:w-96 h-full bg-white p-6 flex flex-col justify-between">
-          <div>
-            <button
-              onClick={toggleDrawer}
-              className="text-black mb-6"
-              aria-label="Close menu"
-            >
-              <XMarkIcon className="w-7 h-7" />
-            </button>
-            <ul className="flex flex-col gap-4">
-              {navItems.map((item) => (
-                <li key={item.to}>
-                  {item.type === "scroll" ? (
-                    <ScrollLink
-                      to={item.to}
-                      smooth={true}
-                      duration={500}
-                      onClick={() => {
-                        handleScrollLinkClick(item.to);
-                        toggleDrawer();
-                      }}
-                      className="text-black hover:text-gray-600 font-medium text-xl sm:text-2xl py-2 px-3 rounded-md transition-colors duration-200 hover:bg-gray-100"
-                      aria-label={`Go to ${item.label} section`}
-                    >
-                      {item.label}
-                    </ScrollLink>
-                  ) : (
-                    <RouterLink
-                      to={item.to}
-                      onClick={toggleDrawer}
-                      className="text-black hover:text-gray-600 font-medium text-xl sm:text-2xl py-2 px-3 rounded-md transition-colors duration-200 hover:bg-gray-100"
-                      aria-label={`Go to ${item.label} page`}
-                    >
-                      {item.label}
-                    </RouterLink>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={handleSignupClick}
-              className="bg-white text-black px-4 py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-200 hover:scale-105 transition-all duration-200 text-base sm:text-lg font-semibold border border-black"
-              aria-label="Sign up for ArbiPair"
-              rel="nofollow"
-            >
-              Sign up <UserPlusIcon className="w-5 h-5 text-black" />
-            </button>
-            <button
-              onClick={handleLoginClick}
-              className="bg-black text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-800 hover:scale-105 transition-all duration-200 text-base sm:text-lg font-semibold border border-white"
-              aria-label="Log in to ArbiPair"
-              rel="nofollow"
-            >
-              Log In <LogInIcon className="w-5 h-5 text-white" />
-            </button>
-          </div>
-        </div>
-      </Transition>
     </nav>
   );
 };

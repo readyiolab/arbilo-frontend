@@ -99,9 +99,9 @@ export default function ArbiPairSection() {
                 className="w-full signal_wrapper max-w-4xl mx-auto"
               >
                 <img
-                  src="/assets/images/arbisignal.png"
+                  src="/assets/images/arbisignal.webp"
                   alt="Sample ArbiPair Signals"
-                  className="mx-auto  max-w-full h-auto"
+                  className="mx-auto bg-gradient-to-b from-white to-gray-50  max-w-full h-auto bg-"
                 />
               </motion.div>
             </div>

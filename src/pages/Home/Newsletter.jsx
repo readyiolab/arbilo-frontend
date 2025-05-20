@@ -114,7 +114,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-2">
-              <img src="/assets/images/logo2.png" alt="Arbilo logo" className="w-auto h-8" />
+              <img src="/assets/images/logo2.webp" alt="Arbilo logo" className="w-auto h-8" />
             </div>
             <p className="text-gray-600 leading-relaxed">
               Advanced crypto arbitrage solutions powered by real-time market data and AI-driven insights.

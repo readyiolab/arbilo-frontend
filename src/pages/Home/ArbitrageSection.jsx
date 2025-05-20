@@ -5,13 +5,13 @@ export default function ArbitrageSection() {
     {
       title: "ArbiPair",
       description: "Access cryptocurrency price lists highlighting the highest and lowest prices across multiple exchanges.",
-      icon: "1",
+   
       link: "https://whop.com/checkout/plan_9RzOL8KjwzHS8/",
     },
     {
       title: "ArbiTrack",
       description: "Leverage Arbilo’s exclusive algorithm to find the most profitable trading pairs and exchanges.",
-      icon: "2",
+   
       link: "https://whop.com/checkout/plan_oo91x9FgSm2jL/",
     },
   ];
@@ -47,18 +47,16 @@ export default function ArbitrageSection() {
             >
               Arbitrage Signals
             </motion.h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 px-4 md:px-8 ">
               {cards.map((card, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.2 * (index + 1) }}
-                  className="flex flex-col items-center text-center gap-3 p-4 md:p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+                  className="flex flex-col items-center text-center gap-3 p-3 md:p-5 bg-gray-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
                 >
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white font-semibold text-lg mb-4">
-                    {card.icon}
-                  </div>
+                  
                   <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">{card.title}</h3>
                   <p className="text-base text-gray-800 mb-4">{card.description}</p>
                   <button

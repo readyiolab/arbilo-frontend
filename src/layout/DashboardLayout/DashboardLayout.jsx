@@ -34,7 +34,7 @@ const DashboardLayout = () => {
       <header className="bg-white shadow-lg p-4 text-black">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <NavLink to="/">
+          <NavLink to="#">
             <img
               src="/assets/images/logo2.png"
               alt="company_logo"
