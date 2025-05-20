@@ -1,302 +1,238 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet';
-import { BookOpenIcon, CheckCircleIcon, LightbulbIcon, StarIcon, ShieldCheckIcon } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  BookOpenIcon,
+  CheckCircleIcon,
+  LightbulbIcon,
+  StarIcon,
+  ShieldCheckIcon,
+  TrendingUpIcon,
+} from "lucide-react";
 
 const Tips = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.2 },
     },
   };
 
-  const cardVariants = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
   };
 
+  const tabContentVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+    exit: { opacity: 0, x: 20, transition: { duration: 0.2 } },
+  };
+
+  const sections = [
+    {
+      title: "Build a Strong Foundation",
+      items: [
+        {
+          title: "Begin in Stable Markets",
+          description:
+            "Start trading in stable markets with lower volatility to build confidence. Avoid bull and bear runs initially, as they bring high fluctuations. Pro traders can leverage volatility for arbitrage.",
+          icon: <ShieldCheckIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Start Small",
+          description:
+            "Begin with small trades to minimize risk while mastering ArbiPair and ArbiTrack. Larger trades yield better results but require experience.",
+          icon: <LightbulbIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Understand Arbitrage Basics",
+          description:
+            "Master crypto arbitrage fundamentals. Practice with paper trading using Arbilo’s signals before risking real funds.",
+          icon: <BookOpenIcon className="w-6 h-6 text-black" />,
+        },
+      ],
+    },
+    {
+      title: "Essential Pre-Trade Checks",
+      items: [
+        {
+          title: "Verify Exchange Functionality",
+          description:
+            "Confirm deposits and withdrawals are active on your chosen exchanges, as these can be temporarily suspended.",
+          icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title:
+            "Check Signal Profit jefe: Ensure deposits and withdrawals are active on your chosen exchanges, as these can be temporarily suspended.",
+          icon: <StarIcon className="w-6 h-6 text-black" />,
+        },
+      ],
+    },
+    {
+      title: "Optimize with Tools",
+      items: [
+        {
+          title: "Identify Reliable Exchanges",
+          description:
+            "Use ArbiPair to track exchanges with frequent profitable signals. Keep funds in USDT for quick trades.",
+          icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Efficient Coin Transfers",
+          description:
+            "Buy coins simultaneously on listed exchanges, transfer, and sell back to USDT to minimize costs.",
+          icon: <StarIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Leverage Futures and Options",
+          description: [
+            "Combine ArbiTrack signals with futures and options for higher profits. Execute long or short trades to lock in gains.",
+            "Caution: Futures are risky. Use stop-losses and monitor volatility carefully.",
+          ],
+          icon: <TrendingUpIcon className="w-6 h-6 text-black" />,
+        },
+      ],
+    },
+    {
+      title: "Pro Tips for Success",
+      items: [
+        {
+          title: "Keep a Trading Journal",
+          description:
+            "Document trades to refine your strategy and improve decision-making over time.",
+          icon: <BookOpenIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Stay Adaptable",
+          description:
+            "Monitor market trends and adjust your approach to seize new opportunities.",
+          icon: <StarIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Use ArbiPoint Tools",
+          description:
+            "Leverage ArbiPair and ArbiTrack for streamlined, profitable arbitrage.",
+          icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
+        },
+      ],
+    },
+    {
+      title: "Key Reminders",
+      items: [
+        {
+          title: "Patience Pays Off",
+          description:
+            "Success in arbitrage comes from consistency and disciplined trading.",
+          icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
+        },
+        {
+          title: "Avoid Emotional Trading",
+          description:
+            "Stick to your strategy and wait for high-profitability signals.",
+          icon: <ShieldCheckIcon className="w-6 h-6 text-black" />,
+        },
+      ],
+    },
+  ];
+
   return (
-    <>
-      <Helmet>
-        <title>ArbiPair Trading Tips - Maximize Your Crypto Arbitrage</title>
-        <meta
-          name="description"
-          content="Learn expert trading tips to maximize your crypto arbitrage profits using ArbiPair and ArbiTrack signals. Start small, trade smart, and optimize your strategy."
-        />
-        <meta
-          name="keywords"
-          content="crypto trading tips, ArbiPair, ArbiTrack, crypto arbitrage, trading strategies"
-        />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="ArbiPair Trading Tips - Maximize Your Crypto Arbitrage" />
-        <meta
-          property="og:description"
-          content="Discover how to leverage ArbiPair and ArbiTrack for profitable crypto trading with our expert tips."
-        />
-        <meta property="og:image" content="/assets/images/arbisignal.png" />
-        <meta property="og:url" content="https://yourwebsite.com/#tips" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": "ArbiPair Trading Tips",
-            "description": "Learn expert tips to maximize your crypto arbitrage profits with ArbiPair and ArbiTrack.",
-            "publisher": {
-              "@type": "Organization",
-              "name": "ArbiPair",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "/assets/images/logo2.png",
-              },
-            },
-          })}
-        </script>
-      </Helmet>
-      <section id="tips" className="py-10 sm:py-14 lg:py-18 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className=" mx-auto">
+    <section className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-2xl font-semibold leading-tight text-center text-black md:text-4xl pb-4">
+            Trading Tips
+          </h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">
+            Unlock the power of crypto arbitrage with these expert tips, crafted
+            to elevate your trading game.
+          </p>
+        </motion.div>
+
+        {/* Tabs Navigation */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mb-8"
+        >
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 border-b-2 p-5 border-gray-200">
+            {sections.map((section, index) => (
+              <motion.button
+                key={index}
+                onClick={() => setActiveTab(index)}
+                className={`py-3 px-4 text-sm sm:text-base font-medium transition-all duration-300 relative
+                  ${
+                    activeTab === index
+                      ? "text-white border-2 rounded-xl border-black bg-black"
+                      : "text-gray-600 "
+                  }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {section.title}
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12 sm:mb-16"
+            key={activeTab}
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className=" rounded-xl  p-6 sm:p-8"
           >
-            <h2 className="mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
-              Trading Tips
-            </h2>
+            <div className="grid gap-6">
+              {sections[activeTab].items.map((item, itemIndex) => (
+                <motion.div
+                  key={itemIndex}
+                  variants={itemVariants}
+                  className="flex items-start space-x-4 p-4  transition-colors duration-200"
+                >
+                  {item.icon}
+                  <div>
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                      {item.title}
+                    </h3>
+                    {Array.isArray(item.description) ? (
+                      <ul className="list-disc pl-5 space-y-2 text-gray-600 text-sm sm:text-base">
+                        {item.description.map((desc, idx) => (
+                          <li key={idx}>{desc}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-600 text-sm sm:text-base">
+                        {item.description}
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
-
-          {/* Starting Out Section */}
-          <motion.section
-            className="mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-8 text-center">
-              Starting Out: Build a Strong Foundation
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  title: 'Begin in Stable Markets',
-                  description:
-                    'Start trading in stable markets with lower volatility. Avoid bull and bear runs initially, as they can bring high fluctuations. Pro traders can leverage volatility for arbitrage.',
-                  icon: <ShieldCheckIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Start Small',
-                  description:
-                    'Begin with small trades to minimize risk while learning ArbiPair and ArbiTrack. Larger trades yield better results but require confidence.',
-                  icon: <LightbulbIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Understand Arbitrage Basics',
-                  description:
-                    'Learn crypto arbitrage thoroughly. Practice with paper trading using Arbilo’s signals before committing real funds.',
-                  icon: <BookOpenIcon className="w-8 h-8 text-gray-800" />,
-                },
-              ].map((tip, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardVariants}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col min-h-[180px]"
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    {tip.icon}
-                    <h3 className="text-lg font-semibold text-gray-900">{tip.title}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 flex-grow">{tip.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Preparing to Trade Section */}
-          <motion.section
-            className="mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-8 text-center">
-              Preparing to Trade: Essential Checks
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: 'Verify Exchange Functionality',
-                  description:
-                    'Ensure deposits and withdrawals are active on your chosen exchanges, as these can be temporarily suspended.',
-                  icon: <CheckCircleIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Check Signal Profitability',
-                  description:
-                    'Trade only when signals show a good profit margin, accounting for fees, transfer costs, and liquidity to avoid slippage.',
-                  icon: <StarIcon className="w-8 h-8 text-gray-800" />,
-                },
-              ].map((tip, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardVariants}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col min-h-[180px]"
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    {tip.icon}
-                    <h3 className="text-lg font-semibold text-gray-900">{tip.title}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 flex-grow">{tip.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Optimizing Signals Section */}
-          <motion.section
-            className="mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-8 text-center">
-              Optimizing with ArbiPair and ArbiTrack
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: 'Identify Reliable Exchanges',
-                  description:
-                    'Use ArbiPair to track exchanges with frequent profitable signals. Keep funds in USDT for quick trades.',
-                  icon: <CheckCircleIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Efficient Coin Transfers',
-                  description:
-                    'Buy coins simultaneously on listed exchanges, transfer, and sell back to USDT to minimize costs.',
-                  icon: <StarIcon className="w-8 h-8 text-gray-800" />,
-                },
-              ].map((tip, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardVariants}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col min-h-[180px]"
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    {tip.icon}
-                    <h3 className="text-lg font-semibold text-gray-900">{tip.title}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 flex-grow">{tip.description}</p>
-                </motion.div>
-              ))}
-            </div>
-            <motion.div
-              variants={cardVariants}
-              className="mt-8 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
-              <div className="flex items-center space-x-3 mb-4">
-                <BookOpenIcon className="w-8 h-8 text-gray-800" />
-                <h3 className="text-lg font-semibold text-gray-900">Leverage Futures and Options</h3>
-              </div>
-              <ul className="text-sm text-gray-600 space-y-2 list-disc pl-5">
-                <li>Combine ArbiTrack signals with futures and options for higher profits. Execute long or short trades to lock in gains.</li>
-                <li>Caution: Futures are risky. Use stop-losses and monitor volatility carefully.</li>
-              </ul>
-            </motion.div>
-          </motion.section>
-
-          {/* Pro Tips Section */}
-          <motion.section
-            className="mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-8 text-center">
-              Pro Tips for Long-Term Success
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  title: 'Keep a Trading Journal',
-                  description:
-                    'Document trades to refine your strategy and improve decision-making.',
-                  icon: <BookOpenIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Stay Adaptable',
-                  description:
-                    'Monitor market trends and adapt your approach to capitalize on opportunities.',
-                  icon: <StarIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Use ArbiPoint Tools',
-                  description:
-                    'Leverage ArbiPair and ArbiTrack for simplified, profitable arbitrage.',
-                  icon: <CheckCircleIcon className="w-8 h-8 text-gray-800" />,
-                },
-              ].map((tip, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardVariants}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col min-h-[180px]"
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    {tip.icon}
-                    <h3 className="text-lg font-semibold text-gray-900">{tip.title}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 flex-grow">{tip.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Key Reminders Section */}
-          <motion.section
-            className="mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-8 text-center">
-              Key Reminders
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: 'Patience Pays Off',
-                  description:
-                    'Success in arbitrage comes from consistency and disciplined trading.',
-                  icon: <CheckCircleIcon className="w-8 h-8 text-gray-800" />,
-                },
-                {
-                  title: 'Avoid Emotional Trading',
-                  description:
-                    'Stick to your strategy and wait for high-profitability signals.',
-                  icon: <ShieldCheckIcon className="w-8 h-8 text-gray-800" />,
-                },
-              ].map((tip, index) => (
-                <motion.div
-                  key={index}
-                  variants={cardVariants}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col min-h-[180px]"
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    {tip.icon}
-                    <h3 className="text-lg font-semibold text-gray-900">{tip.title}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 flex-grow">{tip.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-        </div>
-      </section>
-    </>
+        </AnimatePresence>
+      </div>
+    </section>
   );
 };
 

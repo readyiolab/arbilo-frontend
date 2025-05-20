@@ -1,9 +1,9 @@
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { Link as ScrollLink } from 'react-scroll';
-import { useState, useEffect } from 'react';
-import { UserCircleIcon } from 'lucide-react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
-import { Transition } from '@headlessui/react';
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
+import { useState, useEffect } from "react";
+import { UserPlusIcon, LogInIcon } from "lucide-react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
+import { Transition } from "@headlessui/react";
 
 const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -16,22 +16,22 @@ const Header = () => {
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate("/login");
     setIsDrawerOpen(false);
   };
 
   const handleSignupClick = () => {
-    navigate('/signup');
+    navigate("/signup");
     setIsDrawerOpen(false);
   };
 
   const handleScrollLinkClick = (to) => {
-    if (location.pathname !== '/') {
-      navigate('/', { state: { scrollTo: to } });
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollTo: to } });
     } else {
       window.scrollTo({
         top: document.getElementById(to)?.offsetTop || 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
     setIsDrawerOpen(false);
@@ -41,8 +41,8 @@ const Header = () => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -50,28 +50,28 @@ const Header = () => {
       setTimeout(() => {
         window.scrollTo({
           top: document.getElementById(location.state.scrollTo)?.offsetTop || 0,
-          behavior: 'smooth',
+          behavior: "smooth",
         });
       }, 100);
     }
   }, [location]);
 
   const navItems = [
-    { to: 'Signals-section', label: 'Signals', type: 'scroll' },
-    { to: 'how-it-works-section', label: 'How it Works', type: 'scroll' },
-    { to: 'pricing-section', label: 'Pricing', type: 'scroll' },
-    { to: 'faq-section', label: 'FAQs', type: 'scroll' },
-    { to: 'tips', label: 'Tips', type: 'scroll' },
-    { to: '/blog-section', label: 'Blog', type: 'route' },
-    { to: 'contact-section', label: 'Contact Us', type: 'scroll' },
+    { to: "Signals-section", label: "Signals", type: "scroll" },
+    { to: "how-it-works-section", label: "How it Works", type: "scroll" },
+    { to: "pricing-section", label: "Pricing", type: "scroll" },
+    { to: "faq-section", label: "FAQs", type: "scroll" },
+    { to: "tips", label: "Tips", type: "scroll" },
+    { to: "/blog-section", label: "Blog", type: "route" },
+    { to: "contact-section", label: "Contact ", type: "scroll" },
   ];
 
   return (
     <nav
       className={`py-3 sm:py-4 transition-all duration-300 z-50 ${
         isSticky
-          ? 'fixed top-0 left-0 right-0 bg-black shadow-lg text-white'
-          : 'bg-white text-black'
+          ? "fixed top-0 left-0 right-0 bg-black shadow-lg text-white"
+          : "bg-white text-black"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -81,7 +81,7 @@ const Header = () => {
             to="home-section"
             smooth={true}
             duration={500}
-            onClick={() => handleScrollLinkClick('home-section')}
+            onClick={() => handleScrollLinkClick("home-section")}
             className="flex-shrink-0"
             aria-label="Go to home section"
           >
@@ -96,14 +96,14 @@ const Header = () => {
             <ul className="flex gap-4 lg:gap-6">
               {navItems.map((item) => (
                 <li key={item.to}>
-                  {item.type === 'scroll' ? (
+                  {item.type === "scroll" ? (
                     <ScrollLink
                       to={item.to}
                       smooth={true}
                       duration={500}
                       onClick={() => handleScrollLinkClick(item.to)}
                       className={`${
-                        isSticky ? 'text-white' : 'text-black'
+                        isSticky ? "text-white" : "text-black"
                       } font-medium text-sm lg:text-base cursor-pointer transition-colors duration-200 hover:text-gray-300 hover:scale-105`}
                       aria-label={`Go to ${item.label} section`}
                     >
@@ -113,7 +113,7 @@ const Header = () => {
                     <RouterLink
                       to={item.to}
                       className={`${
-                        isSticky ? 'text-white' : 'text-black'
+                        isSticky ? "text-white" : "text-black"
                       } font-medium text-sm lg:text-base cursor-pointer transition-colors duration-200 hover:text-gray-300 hover:scale-105`}
                       aria-label={`Go to ${item.label} page`}
                     >
@@ -133,36 +133,40 @@ const Header = () => {
               onClick={handleSignupClick}
               className={`${
                 isSticky
-                  ? 'bg-white text-black border-black'
-                  : 'bg-white text-black border-black'
+                  ? "bg-white text-black border-black"
+                  : "bg-white text-black border-black"
               } px-3 sm:px-4 py-1.5 sm:py-2 rounded-md flex items-center gap-2 hover:bg-gray-200 hover:scale-105 transition-all duration-200 text-sm font-semibold border`}
               aria-label="Sign up for ArbiPair"
               rel="nofollow"
             >
-              Sign up <UserCircleIcon className="w-4 sm:w-5 h-4 sm:h-5" />
+              Sign up <UserPlusIcon className="w-4 sm:w-5 h-4 sm:h-5" />
             </button>
             <button
               onClick={handleLoginClick}
               className={`${
                 isSticky
-                  ? 'bg-black text-white border-white'
-                  : 'bg-black text-white border-white'
+                  ? "bg-black text-white border-white"
+                  : "bg-black text-white border-white"
               } px-3 sm:px-4 py-1.5 sm:py-2 rounded-md flex items-center gap-2 hover:bg-gray-800 hover:scale-105 transition-all duration-200 text-sm font-semibold border`}
               aria-label="Log in to ArbiPair"
               rel="nofollow"
             >
-              Log In <UserCircleIcon className="w-4 sm:w-5 h-4 sm:h-5" />
+              Log In <LogInIcon className="w-4 sm:w-5 h-4 sm:h-5" />
             </button>
           </div>
           <button
             className="md:hidden"
             onClick={toggleDrawer}
-            aria-label={isDrawerOpen ? 'Close menu' : 'Open menu'}
+            aria-label={isDrawerOpen ? "Close menu" : "Open menu"}
           >
             {isDrawerOpen ? (
-              <XMarkIcon className={`w-6 h-6 ${isSticky ? 'text-white' : 'text-black'}`} />
+              <XMarkIcon
+                className={`w-6 h-6 ${isSticky ? "text-white" : "text-black"}`}
+              />
             ) : (
-              <Bars3Icon className={`w-6 h-6 ${isSticky ? 'text-white' : 'text-black'}`} />
+              <Bars3Icon
+                className={`w-6 h-6 ${isSticky ? "text-white" : "text-black"}`}
+              />
             )}
           </button>
         </div>
@@ -197,7 +201,7 @@ const Header = () => {
             <ul className="flex flex-col gap-4">
               {navItems.map((item) => (
                 <li key={item.to}>
-                  {item.type === 'scroll' ? (
+                  {item.type === "scroll" ? (
                     <ScrollLink
                       to={item.to}
                       smooth={true}
@@ -232,7 +236,7 @@ const Header = () => {
               aria-label="Sign up for ArbiPair"
               rel="nofollow"
             >
-              Sign up <UserCircleIcon className="w-5 h-5 text-black" />
+              Sign up <UserPlusIcon className="w-5 h-5 text-black" />
             </button>
             <button
               onClick={handleLoginClick}
@@ -240,7 +244,7 @@ const Header = () => {
               aria-label="Log in to ArbiPair"
               rel="nofollow"
             >
-              Log In <UserCircleIcon className="w-5 h-5 text-white" />
+              Log In <LogInIcon className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>

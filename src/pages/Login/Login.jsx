@@ -1,74 +1,87 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
-import axios from 'axios';
-import { FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
-import Loader from '../../components/Loader/Loader';
-import { AuthContext } from '../../context/AuthContext';
-import config from '@/config.js/config';
+import React, { useState, useContext, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
+import Loader from "../../components/Loader/Loader";
+import { AuthContext } from "../../context/AuthContext";
+import config from "@/config.js/config";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"; // Add Button for consistency
+
+// Define validation schema with zod
+const formSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+});
 
 export default function Login() {
   const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
-  const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Initialize react-hook-form with zod validation
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // Load remembered credentials
   useEffect(() => {
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
-    const rememberedPassword = localStorage.getItem('rememberedPassword');
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedPassword = localStorage.getItem("rememberedPassword");
     if (rememberedEmail && rememberedPassword) {
-      setForm({ email: rememberedEmail, password: rememberedPassword });
+      form.setValue("email", rememberedEmail);
+      form.setValue("password", rememberedPassword);
       setRememberMe(true);
     }
-  }, []);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  }, [form]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-  
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
       const response = await axios.post(`${config.API_URL}/api/auth/login`, {
-        email: form.email,
-        password: form.password,
+        email: data.email,
+        password: data.password,
       });
-  
+
       if (response.data && response.data.token && response.data.user) {
         const { token, user } = response.data;
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("user", JSON.stringify(user));
         setAuth({ user, token });
-  
+
         if (rememberMe) {
-          localStorage.setItem('rememberedEmail', form.email);
-          localStorage.setItem('rememberedPassword', form.password);
+          localStorage.setItem("rememberedEmail", data.email);
+          localStorage.setItem("rememberedPassword", data.password);
         } else {
-          localStorage.removeItem('rememberedEmail');
-          localStorage.removeItem('rememberedPassword');
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberedPassword");
         }
-  
-        // Display success message from backend if available
-        toast.success(response.data.message || 'Login successful');
-        setTimeout(() => navigate('/dashboard'), 2000);
+
+        toast.success(response.data.message || "Login successful");
+        setTimeout(() => navigate("/dashboard"), 2000);
       } else {
-        // Display error message from backend if available
-        toast.error(response.data.message || 'Invalid login credentials');
+        toast.error(response.data.message || "Invalid login credentials");
       }
     } catch (error) {
-      // Handle error response from backend
       if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error('Error during login');
+        toast.error("Error during login");
       }
       console.error(error);
     } finally {
@@ -76,7 +89,6 @@ export default function Login() {
     }
   };
 
- 
   return (
     <div className="relative min-h-screen bg-gray-50">
       {loading && (
@@ -87,12 +99,13 @@ export default function Login() {
       <Toaster position="top-center" reverseOrder={false} />
 
       <div className="fixed top-4 left-4 z-10">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
         >
           <FaArrowLeft className="w-4 h-4" /> Back
-        </button>
+        </Button>
       </div>
 
       <div className="flex min-h-screen">
@@ -115,85 +128,93 @@ export default function Login() {
               </h2>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6 mt-8">
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Email address
-                </label>
-                <input
-                  id="email"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-8">
+                <FormField
+                  control={form.control}
                   name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition duration-200"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email address</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" className="w-full" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                    Password
-                  </label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-sm font-semibold text-gray-900 hover:text-gray-700 transition-colors hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <FormLabel>Password</FormLabel>
+                        <Link
+                          to="/forgot-password"
+                          className="text-sm font-semibold text-gray-900 hover:text-gray-700 hover:underline"
+                        >
+                          Forgot password?
+                        </Link>
+                      </div>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            {...field}
+                            type={showPassword ? "text" : "password"}
+                            className="w-full"
+                          />
+                          <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          >
+                            {showPassword ? (
+                              <FaEyeSlash className="w-5 h-5" />
+                            ) : (
+                              <FaEye className="w-5 h-5" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex items-center">
                   <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition duration-200"
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
                   />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
-                    {showPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
-                  </button>
+                  <label htmlFor="remember-me" className="ml-2 text-sm text-gray-700">
+                    Remember me
+                  </label>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
-                />
-                <label htmlFor="remember-me" className="ml-2 text-sm text-gray-700">
-                  Remember me
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-2 px-4 rounded-lg bg-black text-white font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Signing in...' : 'Sign in'}
-              </button>
-            </form>
-
-        
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full"
+                >
+                  {loading ? "Signing in..." : "Sign in"}
+                </Button>
+              </form>
+            </Form>
 
             <p className="text-center text-sm text-gray-600">
-              Don't have an account?{' '}
-              <NavLink to="/signup" className="font-semibold text-black hover:text-gray-800 transition-colors hover:underline">
+              Don't have an account?{" "}
+              <NavLink
+                to="/signup"
+                className="font-semibold text-black hover:text-gray-800 hover:underline"
+              >
                 Register here
-              </NavLink> <br />
-              
+              </NavLink>
             </p>
           </div>
         </div>

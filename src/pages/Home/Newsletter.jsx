@@ -1,142 +1,243 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { NavLink } from 'react-router-dom';
+import { 
+  Twitter, 
+  Send, 
+  Disc, 
+  Linkedin,
+  ArrowRight,
+  Mail,
+  Facebook,
+  Youtube
+} from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { InstagramLogoIcon } from '@radix-ui/react-icons';
+import { FaYoutube } from 'react-icons/fa';
+import config from '@/config.js/config';
 
-const Newsletter = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 },
-    },
+const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navLinks = [
+    
+    { to: "how-it-works-section", label: "How it Works", type: "scroll" },
+    { to: "pricing-section", label: "Pricing", type: "scroll" },
+    { to: "faq-section", label: "FAQs", type: "scroll" },
+    { to: "tips", label: "Tips", type: "scroll" },
+    { to: "/blog-section", label: "Blog", type: "route" },
+    { to: "contact-section", label: "Contact", type: "scroll" },
+  ];
+
+  const quickLinks = [
+    { to: "/privacy-policy", label: "Privacy Policy", type: "route" },
+    { to: "/terms-and-conditions", label: "Terms & Conditions", type: "route" },
+    { to: "/earning-disclaimer", label: "Earning Disclaimer", type: "route" },
+  ];
+
+  const socialLinks = [
+    { icon: InstagramLogoIcon, href: "https://www.instagram.com/arbilo01/", label: "Instagram" },
+    { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61576167397019", label: "Facebook" },
+    { icon: FaYoutube, href: "https://www.youtube.com/@Arbilo-p2p", label: "Youtube" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/arbilo", label: "LinkedIn" },
+  ];
+
+  const handleSubscribe = async () => {
+    setMessage('');
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`${config.API_URL}/api/newsletter/subscribe`, { email });
+      setMessage(response.data.message || 'Thank you for subscribing to our newsletter!');
+      setEmail('');
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+      setLoading(false);
+    }
   };
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  const handleScroll = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <>
-      <Helmet>
-        <title>ArbiPair Newsletter</title>
-        <meta
-          name="description"
-          content="Subscribe to ArbiPair's newsletter for updates on crypto arbitrage tools and services, and review our privacy and terms information."
-        />
-        <meta
-          name="keywords"
-          content="ArbiPair, newsletter, crypto arbitrage, subscription, privacy policy, terms and conditions"
-        />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="ArbiPair Newsletter" />
-        <meta
-          property="og:description"
-          content="Stay updated with ArbiPair's newsletter and learn about our crypto arbitrage tools, privacy policy, and terms."
-        />
-        <meta property="og:image" content="/assets/images/logo2.png" />
-        <meta property="og:url" content="https://yourwebsite.com/newsletter" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Newsletter",
-            "description": "Newsletter subscription and legal information for ArbiPair's crypto arbitrage tools and services.",
-            "publisher": {
-              "@type": "Organization",
-              "name": "ArbiPair",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "/assets/images/logo2.png",
-              },
-            },
-          })}
-        </script>
-      </Helmet>
-      <section className="border-t pt-5 bg-gray-50">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col md:flex-row justify-between items-center space-y-10 md:space-y-0"
-          >
-            {/* Left Section - Content */}
-            <motion.div variants={sectionVariants} className="md:w-1/2 flex flex-col items-start">
-              <img src="/assets/images/logo2.png" alt="ArbiPair logo" className="w-24 mb-6" />
-              <p className="text-gray-600 text-sm sm:text-base mb-4 text-left">
-                We use cookies to enhance your experience. By continuing to use our website, you agree to our use of cookies and accept our{' '}
-                <Link to="/terms-and-conditions" className="text-black hover:underline">
-                  Terms and Conditions
-                </Link>
-                ,{' '}
-                <Link to="/privacy-policy" className="text-black hover:underline">
-                  Privacy Policy
-                </Link>
-                , and{' '}
-                <Link to="/earning-disclaimer" className="text-black hover:underline">
-                  Earning Disclaimer
-                </Link>
-                .
-              </p>
-              <p className="text-gray-600 text-sm sm:text-base text-left">
-                The information provided on Arbilo.com is general and does not account for personal circumstances. Crypto trading involves significant risks, including the potential loss of your entire investment. Users should understand these risks, conduct thorough research, and consider seeking independent financial advice before trading. Arbilo.com is not liable for any losses resulting from reliance on the information provided. Use of this website is entirely at your own risk.
-              </p>
-            </motion.div>
-
-            {/* Right Section - Newsletter Subscription */}
-            <motion.div variants={sectionVariants} className="md:w-1/2 flex justify-center md:justify-end w-full">
-              <div className="bg-white border p-6 rounded-lg w-full max-w-md shadow-md">
-                <h3 className="font-semibold text-gray-900 text-lg sm:text-xl mb-3 text-left">
-                  Newsletter Subscription
-                </h3>
-                <motion.div variants={sectionVariants} className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-2">
+    <footer className="bg-gray-100 border-t border-gray-200">
+      {/* Newsletter Section */}
+      <div className="max-w-7xl mx-auto px-4 py-5">
+        <div className="bg-black rounded-2xl shadow-xl overflow-hidden">
+          <div className="px-6 py-12 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-white max-w-xl">
+              <h2 className="text-3xl font-bold mb-3">Stay Ahead of the Market</h2>
+              <p className="text-gray-300">Subscribe to receive real-time trading signals and exclusive market insights directly to your inbox.</p>
+            </div>
+            
+            <div className="w-full max-w-md">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-grow">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <Input
                     type="email"
                     placeholder="Enter your email"
-                    className="w-full sm:flex-1 text-sm text-gray-900 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 w-full bg-white border-0 text-gray-800 placeholder-gray-400 rounded-lg"
+                    required
                   />
-                  <Button className="w-full sm:w-auto bg-black text-white hover:bg-gray-800 text-sm font-semibold rounded-md">
-                    Subscribe
-                  </Button>
-                </motion.div>
-                <p className="text-xs text-gray-500 mt-2 text-left">
-                  Your data is secured. Unsubscribe anytime.
-                </p>
+                </div>
+                <Button
+                  onClick={handleSubscribe}
+                  disabled={loading || !email}
+                  className="bg-white text-black hover:bg-gray-100 font-medium rounded-lg px-6 transition-all flex items-center justify-center gap-2"
+                >
+                  {loading ? 'Subscribing...' : 'Subscribe'} 
+                  {!loading && <ArrowRight className="h-4 w-4" />}
+                </Button>
               </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Bottom Section - Privacy Policy, Terms, and Earning Disclaimer */}
-          <motion.div variants={sectionVariants} className=" mt-10 text-center">
-            <p className="text-sm text-gray-600">
-              <span className="space-x-2">
-                <Link to="/privacy-policy" className="text-black hover:underline">
-                  Privacy Policy
-                </Link>
-                <span>|</span>
-                <Link to="/terms-and-conditions" className="text-black hover:underline">
-                  Terms and Conditions
-                </Link>
-                <span>|</span>
-                <Link to="/earning-disclaimer" className="text-black hover:underline">
-                  Earning Disclaimer
-                </Link>
-              </span>
-              <br />
-              <span className="text-gray-500 mt-2 block">
-                © 2025 Arbilo <span className="ml-2">All rights reserved.</span>
-              </span>
-            </p>
-          </motion.div>
+              {message && <p className="text-white text-sm mt-2 bg-gray-700/40 px-3 py-1 rounded">{message}</p>}
+              {error && <p className="text-white text-sm mt-2 bg-red-700/40 px-3 py-1 rounded">{error}</p>}
+              <p className="text-xs text-gray-300 mt-2">Your data is secure. Unsubscribe anytime.</p>
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+        
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mt-16">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <img src="/assets/images/logo2.png" alt="Arbilo logo" className="w-auto h-8" />
+            </div>
+            <p className="text-gray-600 leading-relaxed">
+              Advanced crypto arbitrage solutions powered by real-time market data and AI-driven insights.
+            </p>
+            <div className="flex space-x-4">
+              {socialLinks.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gray-100 p-2 rounded-full text-gray-600 hover:bg-gray-200 hover:text-black transition-colors"
+                  aria-label={label}
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+          
+          {/* Navigation Links */}
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2">Explore</h3>
+            <ul className="space-y-3">
+              {navLinks.slice(0, 5).map(({ to, label, type }) => (
+                <li key={label}>
+                  {type === "scroll" ? (
+                    <button
+                      onClick={() => handleScroll(to)}
+                      className="text-gray-600 hover:text-black transition-colors flex items-center gap-2"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-gray-500"></span> {label}
+                    </button>
+                  ) : (
+                    <NavLink
+                      to={to}
+                      className={({ isActive }) => 
+                        `text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-2 ${isActive ? 'text-blue-600 font-medium' : ''}`
+                      }
+                    >
+                      <span className="w-1 h-1 rounded-full bg-blue-500"></span> {label}
+                    </NavLink>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* More Links */}
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2">Resources</h3>
+            <ul className="space-y-3">
+              {navLinks.slice(5).map(({ to, label, type }) => (
+                <li key={label}>
+                  {type === "scroll" ? (
+                    <button
+                      onClick={() => handleScroll(to)}
+                      className="text-gray-600 hover:text-black transition-colors flex items-center gap-2"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-gray-500"></span> {label}
+                    </button>
+                  ) : (
+                    <NavLink
+                      to={to}
+                      className={({ isActive }) => 
+                        `text-gray-600 hover:text-black transition-colors flex items-center gap-2 ${isActive ? 'text-blue-600 font-medium' : ''}`
+                      }
+                    >
+                      <span className="w-1 h-1 rounded-full bg-gray-500"></span> {label}
+                    </NavLink>
+                  )}
+                </li>
+              ))}
+              {quickLinks.map(({ to, label }) => (
+                <li key={label}>
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) => 
+                      `text-gray-600 hover:text-black transition-colors flex items-center gap-2 ${isActive ? 'text-blue-600 font-medium' : ''}`
+                    }
+                  >
+                    <span className="w-1 h-1 rounded-full bg-gray-500"></span> {label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* Legal */}
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2">Legal</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              Crypto trading involves significant risks, including potential loss of investment. 
+              Users should understand these risks and conduct thorough research. 
+              Arbilo is not liable for any losses resulting from reliance on the information provided.
+            </p>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              By using our website, you agree to our{' '}
+              <NavLink to="/terms-and-conditions" className="text-gray-800 hover:underline">
+                Terms and Conditions
+              </NavLink>
+              ,{' '}
+              <NavLink to="/privacy-policy" className="text-gray-800 hover:underline">
+                Privacy Policy
+              </NavLink>
+              , and{' '}
+              <NavLink to="/earning-disclaimer" className="text-gray-800 hover:underline">
+                Earning Disclaimer
+              </NavLink>
+              .
+            </p>
+          </div>
+        </div>
+        
+        {/* Copyright */}
+        <div className="mt-16 pt-8 border-t border-gray-200 text-center">
+          <p className="text-sm text-gray-500">
+            © {new Date().getFullYear()} Arbilo. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 
-export default Newsletter;
+export default Footer;

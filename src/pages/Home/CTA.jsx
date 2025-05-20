@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet';
 import { toast, Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import config from '@/config.js/config';
@@ -56,42 +55,7 @@ const CTA = () => {
 
   return (
     <>
-      <Helmet>
-        <title>ArbiPair Contact Us</title>
-        <meta
-          name="description"
-          content="Contact ArbiPair for support or inquiries about our crypto arbitrage tools and services."
-        />
-        <meta
-          name="keywords"
-          content="ArbiPair, contact us, crypto arbitrage, support"
-        />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="ArbiPair Contact Us" />
-        <meta
-          property="og:description"
-          content="Get in touch with ArbiPair for any questions or support regarding our crypto arbitrage platform."
-        />
-        <meta property="og:image" content="/assets/images/logo2.png" />
-        <meta property="og:url" content="https://yourwebsite.com/contact" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Contact Us",
-            "description": "Contact page for ArbiPair's crypto arbitrage tools and services.",
-            "publisher": {
-              "@type": "Organization",
-              "name": "ArbiPair",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "/assets/images/logo2.png",
-              },
-            },
-          })}
-        </script>
-      </Helmet>
+     
       <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
         <Toaster />
         <div className="mx-auto max-w-screen-md">

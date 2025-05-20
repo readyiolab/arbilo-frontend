@@ -22,7 +22,7 @@ const CreateCredential = () => {
   const handleCreateUser = async (e) => {
     e.preventDefault();
 
-    if (!name.trim() || !email.trim() || !startDate) {
+    if (!name.trim() || !email.trim() || !startDate || !subscription) {
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -36,37 +36,43 @@ const CreateCredential = () => {
       start_date: format(startDate, "yyyy-MM-dd"),
     };
 
-    await toast.promise(
-      axios.post(`${config.API_URL}/api/auth/create-user`, subscriptionDetails),
-      {
-        loading: "Sending credentials...",
-        success: (response) => {
-          setEmail("");
-          setName("");
-          setSubscription("monthly");
-          setStartDate(null);
-          return response.data.message || "User created and credentials sent successfully";
-        },
-        error: (error) => error.response?.data?.message || "Failed to send credentials",
-      }
-    );
+    try {
+      const response = await toast.promise(
+        axios.post(`${config.API_URL}/api/admin/create-user`, subscriptionDetails, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+          },
+        }),
+        {
+          loading: "Sending credentials...",
+          success: (response) => response.data.message || "User created and credentials sent successfully",
+          error: (error) => error.response?.data?.message || "Failed to send credentials",
+        }
+      );
 
-    setLoading(false);
+      setEmail("");
+      setName("");
+      setSubscription("monthly");
+      setStartDate(null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className={cn("flex items-center justify-center  ")}>
-      <div className={cn("mx-auto w-full  p-6  space-y-2")}>
+    <div className={cn("flex items-center justify-center min-h-screen")}>
+      <div className={cn("mx-auto w-full max-w-md p-6 space-y-6")}>
         <Toaster position="top-center" />
-        <h2 className={cn("text-3xl font-bold text-center text-gray-900")}>
+        <h2 className={cn("text-2xl font-bold text-center text-gray-900")}>
           Create Credential
         </h2>
 
-        <form onSubmit={handleCreateUser} className={cn("space-y-6")}>
+        <form onSubmit={handleCreateUser} className={cn("space-y-4")}>
           <div className={cn("space-y-2")}>
-            <Label htmlFor="name" className={cn("text-sm font-medium text-gray-700")}>
-              Name <span className="text-red-500">*</span>
-            </Label>
+            <Label htmlFor="name">Name <span className="text-red-500">*</span></Label>
             <Input
               type="text"
               id="name"
@@ -74,14 +80,11 @@ const CreateCredential = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={loading}
-              className={cn("w-full border-gray-300 focus:ring-indigo-500 focus:border-indigo-500")}
             />
           </div>
 
           <div className={cn("space-y-2")}>
-            <Label htmlFor="email" className={cn("text-sm font-medium text-gray-700")}>
-              Email <span className="text-red-500">*</span>
-            </Label>
+            <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
             <Input
               type="email"
               id="email"
@@ -89,39 +92,34 @@ const CreateCredential = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
-              className={cn("w-full border-gray-300 focus:ring-indigo-500 focus:border-indigo-500")}
             />
           </div>
 
           <div className={cn("space-y-2")}>
-            <Label htmlFor="subscription" className={cn("text-sm font-medium text-gray-700")}>
-              Subscription Plan <span className="text-red-500">*</span>
-            </Label>
+            <Label htmlFor="subscription">Subscription Plan <span className="text-red-500">*</span></Label>
             <Select
               value={subscription}
               onValueChange={setSubscription}
               disabled={loading}
             >
-              <SelectTrigger className={cn("w-full border-gray-300 focus:ring-indigo-500 focus:border-indigo-500")}>
+              <SelectTrigger>
                 <SelectValue placeholder="Select a plan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="monthly">Monthly Subscription - $59</SelectItem>
-                <SelectItem value="quarterly">Quarterly Subscription - $129</SelectItem>
+                <SelectItem value="monthly">Monthly Subscription</SelectItem>
+                <SelectItem value="6-months">6-Month Subscription</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className={cn("space-y-2")}>
-            <Label htmlFor="start-date" className={cn("text-sm font-medium text-gray-700")}>
-              Subscription Start Date <span className="text-red-500">*</span>
-            </Label>
+            <Label htmlFor="start-date">Start Date <span className="text-red-500">*</span></Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal border-gray-300",
+                    "w-full justify-start text-left font-normal",
                     !startDate && "text-muted-foreground"
                   )}
                   disabled={loading}
@@ -136,7 +134,6 @@ const CreateCredential = () => {
                   selected={startDate}
                   onSelect={setStartDate}
                   initialFocus
-                  className="rounded-md border border-gray-300"
                 />
               </PopoverContent>
             </Popover>
@@ -146,7 +143,7 @@ const CreateCredential = () => {
             type="submit"
             disabled={loading}
             className={cn(
-              "w-full bg-black text-white  transition-colors",
+              "w-full bg-black text-white",
               loading && "opacity-50 cursor-not-allowed"
             )}
           >
