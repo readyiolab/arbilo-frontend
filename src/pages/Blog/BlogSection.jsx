@@ -190,11 +190,11 @@ export default function BlogSection() {
             </div>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Health & Wellness Blog</h2>
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Crypto Insights Hub </h2>
           <div className="h-1 w-24 bg-black mx-auto mb-6"></div>
           
           <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto">
-            Insights, tips, and the latest research to help you live your healthiest life.
+            Stay ahead with the latest trends, tips, and insights in the world of cryptocurrency and blockchain.
           </p>
         </div>
 
