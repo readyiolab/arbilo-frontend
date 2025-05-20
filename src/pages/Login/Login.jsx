@@ -123,7 +123,7 @@ export default function Login() {
 
         <div className="w-full lg:w-1/2 flex flex-col justify-center px-4 sm:px-6 lg:px-8">
           <div className="lg:hidden flex justify-center mb-8 mt-16">
-            <img alt="Logo" src="/assets/images/logo2.png" className="w-32" />
+            <img alt="Logo" src="/assets/images/logo2.webp" className="w-32" />
           </div>
 
           <div className="max-w-md w-full mx-auto space-y-8">
@@ -218,7 +218,7 @@ export default function Login() {
                 onClick={handleRegisterClick}
                 className="font-semibold text-black hover:text-gray-800 hover:underline"
               >
-                Register here
+                Signup
               </button>
             </p>
           </div>

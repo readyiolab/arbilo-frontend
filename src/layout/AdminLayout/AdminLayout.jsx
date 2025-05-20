@@ -53,7 +53,7 @@ const AdminLayout = () => {
         <div className="p-4 border-b border-gray-800">
           <NavLink to="/admin-dashboard">
             <img
-              src="/assets/images/logo2.png"
+              src="/assets/images/logo2.webp"
               alt="company_logo"
               loading="lazy"
               className="w-32"

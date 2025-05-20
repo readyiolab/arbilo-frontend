@@ -36,7 +36,7 @@ const DashboardLayout = () => {
           {/* Logo */}
           <NavLink to="#">
             <img
-              src="/assets/images/logo2.png"
+              src="/assets/images/logo2.webp"
               alt="company_logo"
               loading="lazy"
               className="w-32 md:w-20 cursor-pointer"
