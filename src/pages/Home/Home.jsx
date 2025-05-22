@@ -132,7 +132,7 @@ const Home = () => {
                   className="home-title-inner w-full max-w-6xl mx-auto"
                 >
                   <div className="home-subtitle w-full max-w-6xl mx-auto pb-8">
-                    <h2 className="pair-point-description text-2xl font-semibold leading-tight text-center text-black md:text-4xl">
+                    <h2 className="pair-point-description mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
                       How ArbiTrack Works
                     </h2>
                   </div>
@@ -206,7 +206,7 @@ const Home = () => {
               >
                 <div className="home-content-title-inner w-full max-w-6xl mx-auto">
                   <div className="home-content-title-text pb-8">
-                    <h2 className="home-content-heading text-2xl font-semibold leading-tight text-center text-black md:text-4xl">
+                    <h2 className="home-content-heading mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
                       Sample ArbiTrack Signals
                     </h2>
                   </div>

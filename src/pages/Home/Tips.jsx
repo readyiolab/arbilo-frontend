@@ -46,19 +46,19 @@ const Tips = () => {
         {
           title: "Begin in Stable Markets",
           description:
-            "Start trading in stable markets with lower volatility to build confidence. Avoid bull and bear runs initially, as they bring high fluctuations. Pro traders can leverage volatility for arbitrage.",
+            "For beginners, start trading in stable markets with lower volatility. Avoid bull and bear runs initially, as they can bring high fluctuations. Pro traders, however, can leverage this volatility to their advantage in arbitrage, making it better suited for experienced traders.",
           icon: <ShieldCheckIcon className="w-6 h-6 text-black" />,
         },
         {
           title: "Start Small",
           description:
-            "Begin with small trades to minimize risk while mastering ArbiPair and ArbiTrack. Larger trades yield better results but require experience.",
+            "If you’re new to crypto arbitrage, begin with small trades to minimize risk while familiarizing yourself with strategies and tools like ArbiPair and ArbiTrack. While larger trades yield better results due to lower relative transfer costs, it’s crucial to first build confidence.",
           icon: <LightbulbIcon className="w-6 h-6 text-black" />,
         },
         {
           title: "Understand Arbitrage Basics",
           description:
-            "Master crypto arbitrage fundamentals. Practice with paper trading using Arbilo’s signals before risking real funds.",
+            "Take the time to thoroughly learn crypto arbitrage. Consistent effort and experience can lead to stable profits over time. Beginners can practice using paper trading with Arbilo's signals before committing real funds.",
           icon: <BookOpenIcon className="w-6 h-6 text-black" />,
         },
       ],
@@ -69,13 +69,14 @@ const Tips = () => {
         {
           title: "Verify Exchange Functionality",
           description:
-            "Confirm deposits and withdrawals are active on your chosen exchanges, as these can be temporarily suspended.",
+            "Ensure both deposits and withdrawals are active on the exchanges you plan to trade with, as these functions are sometimes temporarily suspended.",
           icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
         },
         {
           title:
-            "Check Signal Profit jefe: Ensure deposits and withdrawals are active on your chosen exchanges, as these can be temporarily suspended.",
-          icon: <StarIcon className="w-6 h-6 text-black" />,
+            "Check Signal Profit  ",
+          description:"Trade only when signals indicate a good profit margin, accounting for transaction fees, transfer costs, and price fluctuations. Verify liquidity on the suggested exchanges to avoid execution delays or slippage.",
+            icon: <StarIcon className="w-6 h-6 text-black" />,
         },
       ],
     },
@@ -85,20 +86,20 @@ const Tips = () => {
         {
           title: "Identify Reliable Exchanges",
           description:
-            "Use ArbiPair to track exchanges with frequent profitable signals. Keep funds in USDT for quick trades.",
+            "Use ArbiPair to track which exchanges frequently provide profitable signals. Take notes, observe trends, and keep funds in USDT on those exchanges to execute trades quickly when opportunities arise.",
           icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
         },
         {
           title: "Efficient Coin Transfers",
           description:
-            "Buy coins simultaneously on listed exchanges, transfer, and sell back to USDT to minimize costs.",
+            "Pro traders recommend buying Coin 1 and Coin 2 simultaneously on the respective exchanges listed in the signals. Ensure funds are pre-loaded on both Exchange A and Exchange B. Transfer the coins across exchanges, then sell them back to USDT to save time and minimize transfer costs.",
           icon: <StarIcon className="w-6 h-6 text-black" />,
         },
         {
           title: "Leverage Futures and Options",
           description: [
-            "Combine ArbiTrack signals with futures and options for higher profits. Execute long or short trades to lock in gains.",
-            "Caution: Futures are risky. Use stop-losses and monitor volatility carefully.",
+            "Advanced traders can enhance profits by combining ArbiTrack signals with futures and options trading. For example, if a coin’s price is significantly lower or higher on one exchange, execute future trades (long or short) to lock in profits when prices align.",
+            "Caution: Futures trading is risky. Only attempt this if you’re experienced, and always use stop-losses and monitor market volatility carefully.",
           ],
           icon: <TrendingUpIcon className="w-6 h-6 text-black" />,
         },
@@ -110,19 +111,19 @@ const Tips = () => {
         {
           title: "Keep a Trading Journal",
           description:
-            "Document trades to refine your strategy and improve decision-making over time.",
+            "Document your trades, including exchanges, signals, and outcomes. Reviewing this data will help refine your strategy, identify trends, and improve decision-making over time.",
           icon: <BookOpenIcon className="w-6 h-6 text-black" />,
         },
         {
           title: "Stay Adaptable",
           description:
-            "Monitor market trends and adjust your approach to seize new opportunities.",
+            "Arbitrage opportunities vary with market conditions. Regularly monitor trends and adapt your approach to take advantage of evolving opportunities.",
           icon: <StarIcon className="w-6 h-6 text-black" />,
         },
         {
-          title: "Use ArbiPoint Tools",
+          title: "Use ArbiPoint Tools to Maximize Profits",
           description:
-            "Leverage ArbiPair and ArbiTrack for streamlined, profitable arbitrage.",
+            "Utilize Arbilo’s tools like ArbiPair for advanced pair trading strategies and ArbiTrack for real-time signals. These tools simplify arbitrage, making it accessible and profitable for both beginners and advanced traders.",
           icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
         },
       ],
@@ -133,13 +134,13 @@ const Tips = () => {
         {
           title: "Patience Pays Off",
           description:
-            "Success in arbitrage comes from consistency and disciplined trading.",
+            "Arbitrage isn’t about instant wealth. Success comes from experience, consistency, and disciplined trading.",
           icon: <CheckCircleIcon className="w-6 h-6 text-black" />,
         },
         {
           title: "Avoid Emotional Trading",
           description:
-            "Stick to your strategy and wait for high-profitability signals.",
+            "Stick to your strategy and avoid impulsive decisions driven by greed or fear. Wait for the right signals with high profitability and execute trades thoughtfully.",
           icon: <ShieldCheckIcon className="w-6 h-6 text-black" />,
         },
       ],
@@ -156,7 +157,7 @@ const Tips = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h2 className="text-2xl font-semibold leading-tight text-center text-black md:text-4xl pb-4">
+          <h2 className="mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
             Trading Tips
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">

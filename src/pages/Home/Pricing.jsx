@@ -27,7 +27,7 @@ export default function PricingSection() {
   return (
     <div className="relative bg-white px-4 sm:px-6 lg:px-10 my-6">
       <div className="mx-auto max-w-7xl pb-10">
-        <h2 className="mb-4 text-2xl font-semibold leading-tight text-center text-black md:text-4xl">
+        <h2 className="mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900">
           Our Pricing
         </h2>
 

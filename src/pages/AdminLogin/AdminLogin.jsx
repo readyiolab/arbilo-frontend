@@ -97,7 +97,7 @@ export default function AdminLogin() {
 
       <div className="flex min-h-screen">
         <div className="hidden lg:flex w-1/2 flex-col justify-center items-center bg-gray-50 p-8">
-          <img alt="Logo" src="/assets/images/logo2.png" className="w-40 mb-8" />
+          <img alt="Logo" src="/assets/images/logo2.webp" className="w-40 mb-8" />
           <h1 className="text-4xl font-bold text-gray-900 mb-6 text-center max-w-lg">
             Admin Login
           </h1>

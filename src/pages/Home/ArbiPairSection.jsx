@@ -33,7 +33,7 @@ export default function ArbiPairSection() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="home-content-heading text-3xl md:text-5xl font-semibold leading-tight text-gray-900 py-6"
+              className="home-content-heading mb-10 text-3xl sm:text-4xl font-bold text-center text-gray-900"
             >
               How ArbiPair Works
             </motion.h2>

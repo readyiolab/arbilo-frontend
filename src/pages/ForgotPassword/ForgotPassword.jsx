@@ -49,7 +49,7 @@ export default function ForgotPassword() {
           <div className="flex justify-center">
             <img
               alt="Arbilo"
-              src="/assets/images/logo2.png"
+              src="/assets/images/logo2.webp"
               className="h-12 w-auto sm:h-16 object-contain"
             />
           </div>
