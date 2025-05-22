@@ -63,8 +63,8 @@ const CreateCredential = () => {
   };
 
   return (
-    <div className={cn("flex items-center justify-center min-h-screen")}>
-      <div className={cn("mx-auto w-full max-w-md p-6 space-y-6")}>
+    <div className={cn("")}>
+      <div className={cn("  p-6 space-y-6")}>
         <Toaster position="top-center" />
         <h2 className={cn("text-2xl font-bold text-center text-gray-900")}>
           Create Credential

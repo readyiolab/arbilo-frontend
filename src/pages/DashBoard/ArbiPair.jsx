@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import {
-  useTable,
-  useSortBy,
-  useFilters,
-  usePagination,
-} from "react-table";
-import { ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
+  flexRender,
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -15,115 +14,212 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
-const ArbiPair = ({ data, loading, error }) => {
-  const [topResults, setTopResults] = useState([]);
-
-  useEffect(() => {
-    if (Array.isArray(data)) {
-      setTopResults(data);
-    }
-  }, [data]); // Update topResults when data changes
-
+const ArbiPair = ({ data = [], loading, error }) => {
   const columns = useMemo(
     () => [
-      { Header: "Coin Pair", accessor: "pair" },
-      { Header: "Coin 1", accessor: "coin1" },
-      { Header: "Coin 2", accessor: "coin2" },
-      { Header: "Exchange A", accessor: "minExchange" },
-      { Header: "Coin 1 Price @ Exchange A", accessor: "minPrice1" },
-      { Header: "Coin 2 Price @ Exchange A", accessor: "minPrice2" },
-      { Header: "Exchange B", accessor: "maxExchange" },
-      { Header: "Coin 1 Price @ Exchange B", accessor: "maxPrice1" },
-      { Header: "Coin 2 Price @ Exchange B", accessor: "maxPrice2" },
       {
-        Header: "Profit %",
-        accessor: (row) =>
-          row.profitPercentage ? `${Number(row.profitPercentage).toFixed(2)}%` : "0.00%",
-        sortType: "number",
-        sortDescFirst: true,
+        header: "Coin Pair",
+        accessorKey: "pair",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {row.original.pair || "-"}
+          </span>
+        ),
+      },
+      {
+        header: "Coin 1",
+        accessorKey: "coin1",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {row.original.coin1 || "-"}
+          </span>
+        ),
+      },
+      {
+        header: "Coin 2",
+        accessorKey: "coin2",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {row.original.coin2 || "-"}
+          </span>
+        ),
+      },
+      {
+        header: "Exchange A",
+        accessorKey: "minExchange",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {row.original.minExchange || "-"}
+          </span>
+        ),
+      },
+      {
+        header: () => (
+          <div className="flex flex-col">
+            <span>Coin 1 Price @</span>
+            <span>Exchange A</span>
+          </div>
+        ),
+        accessorKey: "minPrice1",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            ${Number(row.original.minPrice1 || 0).toFixed(2)}
+          </span>
+        ),
+      },
+      {
+        header: () => (
+          <div className="flex flex-col">
+            <span>Coin 2 Price @</span>
+            <span>Exchange A</span>
+          </div>
+        ),
+        accessorKey: "minPrice2",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            ${Number(row.original.minPrice2 || 0).toFixed(2)}
+          </span>
+        ),
+      },
+      {
+        header: "Exchange B",
+        accessorKey: "maxExchange",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {row.original.maxExchange || "-"}
+          </span>
+        ),
+      },
+      {
+        header: () => (
+          <div className="flex flex-col">
+            <span>Coin 1 Price @</span>
+            <span>Exchange B</span>
+          </div>
+        ),
+        accessorKey: "maxPrice1",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            ${Number(row.original.maxPrice1 || 0).toFixed(2)}
+          </span>
+        ),
+      },
+      {
+        header: () => (
+          <div className="flex flex-col">
+            <span>Coin 2 Price @</span>
+            <span>Exchange B</span>
+          </div>
+        ),
+        accessorKey: "maxPrice2",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            ${Number(row.original.maxPrice2 || 0).toFixed(2)}
+          </span>
+        ),
+      },
+      {
+        header: "Profit %",
+        accessorKey: "profitPercentage",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {Number(row.original.profitPercentage || 0).toFixed(2)}%
+          </span>
+        ),
+        sortingFn: "alphanumeric",
       },
     ],
     []
   );
 
-  const tableInstance = useTable(
-    {
-      columns,
-      data: topResults, // Use updated state
-      initialState: { sortBy: [{ id: "Profit %", desc: true }] },
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      sorting: [{ id: "profitPercentage", desc: true }],
+      pagination: { pageSize: 10 },
     },
-    useFilters,
-    useSortBy,
-    usePagination
-  );
+  });
 
   const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
+    getHeaderGroups,
+    getRowModel,
+    previousPage,
+    nextPage,
     canPreviousPage,
     canNextPage,
-    pageIndex,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
+    getPageCount,
     setPageSize,
-  } = tableInstance;
+    getState,
+    setPageIndex,
+  } = table;
+
+  // Reset pageIndex to 0 when data changes
+  useEffect(() => {
+    setPageIndex(0);
+  }, [data, setPageIndex]);
 
   return (
-    <div className="w-full">
-      {error && <div className="text-red-500 mb-4">Error: {error}</div>}
+    <div className="w-full overflow-x-auto">
+      {error && (
+        <div className="text-red-500 mb-4 text-center">Error: {error}</div>
+      )}
 
       <div className="rounded-md border">
-        <Table {...getTableProps()}>
+        <Table>
           <TableHeader>
-            {headerGroups.map((headerGroup) => {
-              const { key, ...restProps } = headerGroup.getHeaderGroupProps();
-              return (
-                <TableRow key={key} {...restProps}>
-                  {headerGroup.headers.map((column) => {
-                    const { key, ...headerProps } = column.getHeaderProps(column.getSortByToggleProps());
-                    return (
-                      <TableHead key={key} {...headerProps} className="font-bold">
-                        {column.render("Header")}
-                        {column.isSorted && (
-                          <ChevronDown
-                            className={`inline ml-1 h-4 w-4 ${column.isSortedDesc ? "transform rotate-180" : ""}`}
-                          />
-                        )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+            {getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="font-bold text-xs sm:text-sm whitespace-nowrap bg-gray-100 text-gray-900"
+                  >
+                    <button
+                      className="flex items-center gap-1"
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getCanSort() && (
+                        <ChevronDown
+                          className={`h-4 w-4 ${
+                            header.column.getIsSorted() === "desc" ? "transform rotate-180" : ""
+                          }`}
+                        />
+                      )}
+                    </button>
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
           </TableHeader>
-          <TableBody {...getTableBodyProps()}>
-            {rows.length > 0 ? (
-              rows.map((row) => {
-                prepareRow(row);
-                const { key, ...rowProps } = row.getRowProps();
-                return (
-                  <TableRow key={key} {...rowProps}>
-                    {row.cells.map((cell) => {
-                      const { key, ...cellProps } = cell.getCellProps();
-                      return (
-                        <TableCell key={key} {...cellProps}>
-                          {cell.render("Cell")}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Loading data...
+                </TableCell>
+              </TableRow>
+            ) : getRowModel().rows.length > 0 ? (
+              getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="text-xs sm:text-sm">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {loading ? "Loading data..." : "No results available."}
+                  No results available.
                 </TableCell>
               </TableRow>
             )}
@@ -132,31 +228,22 @@ const ArbiPair = ({ data, loading, error }) => {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-4">
-        <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          Previous
-        </Button>
-        <div>
-          Page {pageIndex + 1} of {pageCount}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4">
+       
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">Show:</span>
+          <select
+            value={getState().pagination.pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
+            className="border rounded-md p-1 text-sm"
+          >
+            {[10, 20].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
         </div>
-        <Button onClick={() => nextPage()} disabled={!canNextPage}>
-          Next
-        </Button>
-      </div>
-
-      {/* Set Page Size */}
-      <div className="mt-4">
-        <span>Show: </span>
-        <select
-          value={rows.length} // Fix: Using rows.length instead of pageCount
-          onChange={(e) => setPageSize(Number(e.target.value))}
-        >
-          {[10, 20, 30, 40].map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );

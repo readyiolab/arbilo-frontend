@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import config from '@/config.js/config';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import config from "@/config.js/config";
 
 const SubscriptionPage = () => {
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -10,11 +15,9 @@ const SubscriptionPage = () => {
   useEffect(() => {
     const fetchSubscriptionData = async () => {
       try {
-        // Get the JWT token from localStorage or wherever it's stored
-        const token = localStorage.getItem('authToken');
-
+        const token = localStorage.getItem("authToken");
         if (!token) {
-          setError('No authentication token found.');
+          setError("No authentication token found.");
           setLoading(false);
           return;
         }
@@ -27,7 +30,7 @@ const SubscriptionPage = () => {
 
         setSubscriptionData(response.data.userData);
       } catch (err) {
-        setError('Failed to fetch subscription data');
+        setError("Failed to fetch subscription data");
       } finally {
         setLoading(false);
       }
@@ -36,95 +39,184 @@ const SubscriptionPage = () => {
     fetchSubscriptionData();
   }, []);
 
+  const formatDate = (date) =>
+    date
+      ? new Date(date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "N/A";
+
+  const getStatusStyles = (status, isActive) => {
+    if (!isActive || status === "inactive") {
+      return { color: "text-red-600", text: "Inactive" };
+    }
+    switch (status?.toLowerCase()) {
+      case "active":
+        return { color: "text-green-600", text: "Active" };
+      case "pending":
+        return { color: "text-yellow-600", text: "Pending" };
+      case "trial":
+        return { color: "text-blue-600", text: "Trial" };
+      default:
+        return { color: "text-gray-600", text: "Inactive" };
+    }
+  };
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <svg
-          className="animate-spin h-12 w-12 text-green-500"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v8H4z"
-          ></path>
-        </svg>
-      </div>
+      <Card className="container mx-auto p-6 sm:p-8">
+        <CardHeader>
+          <CardTitle className="text-xl sm:text-2xl text-center">Subscription Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[...Array(5)].map((_, index) => (
+              <Skeleton key={index} className="h-10 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-md">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">{error}</span>
-        </div>
-      </div>
+      <Card className="container mx-auto p-6 sm:p-8">
+        <CardContent>
+          <Alert variant="destructive">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
     );
   }
 
+  const statusStyles = getStatusStyles(subscriptionData?.subscription_status, subscriptionData?.is_active);
+
   return (
+    <Card className="container mx-auto p-6 sm:p-8">
+      <CardHeader>
+        <CardTitle className="text-xl sm:text-2xl text-center">Subscription Information</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-6">
+            {/* Subscription Type */}
+            <div className="flex flex-col">
+              <label htmlFor="subscription-type" className="block text-sm font-medium text-gray-700 mb-1">
+                Subscription Type
+              </label>
+              <Input
+                id="subscription-type"
+                name="subscription-type"
+                type="text"
+                className="bg-gray-100 cursor-not-allowed"
+                value={subscriptionData?.subscription_type || "Not Subscribed"}
+                disabled
+                aria-describedby="subscription-type-label"
+              />
+            </div>
 
-    <>
+            {/* Subscription Status */}
+            <div className="flex flex-col">
+              <label htmlFor="subscription-status" className="block text-sm font-medium text-gray-700 mb-1">
+                Subscription Status
+              </label>
+              <Input
+                id="subscription-status"
+                name="subscription-status"
+                type="text"
+                className={`bg-gray-100 cursor-not-allowed ${statusStyles.color}`}
+                value={statusStyles.text}
+                disabled
+                aria-describedby="subscription-status-label"
+              />
+            </div>
 
+            {/* Start Date */}
+            <div className="flex flex-col">
+              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
+              </label>
+              <Input
+                id="start-date"
+                name="start-date"
+                type="text"
+                className="bg-gray-100 cursor-not-allowed"
+                value={formatDate(subscriptionData?.subscription_start_date)}
+                disabled
+                aria-describedby="start-date-label"
+              />
+            </div>
 
+            {/* End Date */}
+            <div className="flex flex-col">
+              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-1">
+                End Date
+              </label>
+              <Input
+                id="end-date"
+                name="end-date"
+                type="text"
+                className="bg-gray-100 cursor-not-allowed"
+                value={formatDate(subscriptionData?.subscription_end_date)}
+                disabled
+                aria-describedby="end-date-label"
+              />
+            </div>
 
-      <div className="space-y-4">
-        {/* Grid layout for subscription info */}
-        <h2 className="text-base font-semibold text-gray-900">Subscription  Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gray-50 p-4 rounded shadow-sm ">
-            <p className="font-medium text-gray-700 ">Name:</p>
-            <p className="text-gray-600 uppercase">{subscriptionData.name}</p>
+            {/* Trial End Date */}
+            {subscriptionData?.trial_end_date && (
+              <div className="flex flex-col">
+                <label htmlFor="trial-end-date" className="block text-sm font-medium text-gray-700 mb-1">
+                  Trial End Date
+                </label>
+                <Input
+                  id="trial-end-date"
+                  name="trial-end-date"
+                  type="text"
+                  className="bg-gray-100 cursor-not-allowed"
+                  value={formatDate(subscriptionData?.trial_end_date)}
+                  disabled
+                  aria-describedby="trial-end-date-label"
+                />
+              </div>
+            )}
           </div>
-          <div className="bg-gray-50 p-4 rounded shadow-sm">
-            <p className="font-medium text-gray-700">Email:</p>
-            <p className="text-gray-600 uppercase">{subscriptionData.email}</p>
-          </div>
-          <div className="bg-gray-50 p-4 rounded shadow-sm">
-            <p className="font-medium text-gray-700">Subscription Type:</p>
-            <p className="text-gray-600 uppercase">
-              {subscriptionData.subscription_type || 'Not Subscribed'}
-            </p>
-          </div>
-          <div className="bg-gray-50 p-4 rounded shadow-sm">
-            <p className="font-medium text-gray-700">Subscription Status:</p>
-            <p className="text-gray-600 uppercase">
-              {subscriptionData.subscription_status || 'Inactive'}
-            </p>
-          </div>
-          <div className="bg-gray-50 p-4 rounded shadow-sm">
-            <p className="font-medium text-gray-700">Start Date:</p>
-            <p className="text-gray-600">
-              {subscriptionData.subscription_start_date
-                ? new Date(subscriptionData.subscription_start_date).toLocaleDateString()
-                : 'N/A'}
-            </p>
-          </div>
-          <div className="bg-gray-50 p-4 rounded shadow-sm">
-            <p className="font-medium text-gray-700">End Date:</p>
-            <p className="text-gray-600 uppercase">
-              {subscriptionData.subscription_end_date
-                ? new Date(subscriptionData.subscription_end_date).toLocaleDateString()
-                : 'N/A'}
-            </p>
-          </div>
+
+          {/* Upgrade Subscription Button */}
+          {!subscriptionData?.is_active && (
+            <div className="mt-8 flex justify-end">
+              <Button
+                onClick={() => (window.location.href = "/subscription")}
+                disabled={loading}
+              >
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  Upgrade Subscription
+                </span>
+              </Button>
+            </div>
+          )}
         </div>
-
-      </div>
-
-    </>
+      </CardContent>
+    </Card>
   );
 };
 
