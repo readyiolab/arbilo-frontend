@@ -32,7 +32,7 @@ const NewsletterUnsubscribe = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md text-center">
-        <img src="/assets/images/logo2.png" alt="Arbilo logo" className="w-24 mx-auto mb-6" />
+        <img src="/assets/images/logo2.webp" alt="Arbilo logo" className="w-24 mx-auto mb-6" />
         <h2 className="text-2xl font-semibold text-gray-900 mb-4">Newsletter Unsubscription</h2>
         {message && <p className="text-green-600">{message}</p>}
         {error && <p className="text-red-600">{error}</p>}
