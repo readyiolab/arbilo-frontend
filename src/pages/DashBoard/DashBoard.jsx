@@ -6,6 +6,7 @@ import ArbiPair from "./ArbiPair";
 import { useDashboard } from "../../context/DashboardContext";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import ReactGA from "react-ga4"; // Import react-ga4
 
 const messages = [
   "Scanning for arbitrage opportunities...",
@@ -28,6 +29,21 @@ const DashBoard = () => {
   const [currentMessage, setCurrentMessage] = useState(messages[0]);
   const isActive = auth?.user?.is_active;
 
+  // Track dashboard page view on mount
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: "/dashboard" });
+  }, []);
+
+  // Track tab switches
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
+    ReactGA.event({
+      category: "Dashboard",
+      action: "Switch Tab",
+      label: tab,
+    });
+  };
+
   // Loading message rotation
   useEffect(() => {
     if (!isInitialized) {
@@ -49,6 +65,11 @@ const DashBoard = () => {
 
   const handleSubscriptionActivate = () => {
     window.location.href = "/subscription"; // Redirect to subscription page
+    ReactGA.event({
+      category: "Dashboard",
+      action: "Click Subscription Activate",
+      label: "Subscription Button",
+    });
   };
 
   return (
@@ -109,9 +130,9 @@ const DashBoard = () => {
       {isInitialized ? (
         <div>
           {/* Custom Tabs Navigation */}
-          <div className="flex flex-col sm:flex-row justify-center gap-2 mb-6  ">
+          <div className="flex flex-col sm:flex-row justify-center gap-2 mb-6">
             <button
-              onClick={() => setActiveTab("ArbiTrack")}
+              onClick={() => handleTabSwitch("ArbiTrack")}
               className={`flex items-center gap-2 text-sm sm:text-base font-medium px-4 py-2 rounded-md transition-all ${
                 activeTab === "ArbiTrack"
                   ? "bg-black text-white"
@@ -122,7 +143,7 @@ const DashBoard = () => {
               ArbiTrack
             </button>
             <button
-              onClick={() => isActive && setActiveTab("ArbiPair")}
+              onClick={() => isActive && handleTabSwitch("ArbiPair")}
               disabled={!isActive}
               className={`flex items-center gap-2 text-sm sm:text-base font-medium px-4 py-2 rounded-md transition-all ${
                 activeTab === "ArbiPair" && isActive
@@ -136,7 +157,7 @@ const DashBoard = () => {
           </div>
 
           {/* Tab Content */}
-          <div className=" p-6">
+          <div className="p-6">
             {activeTab === "ArbiTrack" && (
               <ArbiTrack
                 data={arbiTrackData}

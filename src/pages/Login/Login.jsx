@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import ReactGA from "react-ga4"; // Import react-ga4
 
 // Define validation schema with zod
 const formSchema = z.object({
@@ -27,7 +28,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Initialize react-hook-form with zod validation
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,7 +36,6 @@ export default function Login() {
     },
   });
 
-  // Load remembered credentials
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail");
     const rememberedPassword = localStorage.getItem("rememberedPassword");
@@ -68,6 +67,14 @@ export default function Login() {
         localStorage.setItem("authToken", token);
         localStorage.setItem("user", JSON.stringify(user));
         setAuth({ user, token });
+
+        // Track login event
+        ReactGA.event({
+          category: "User",
+          action: "Login",
+          label: "User Login",
+          userId: user.id, // Optional: Include user ID if allowed
+        });
 
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", data.email);
