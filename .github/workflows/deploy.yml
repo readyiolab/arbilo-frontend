@@ -1,4 +1,4 @@
-name: Deploy React App to Droplet
+name: CI/CD React App to Droplet
 
 on:
   push:
@@ -10,19 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
+      # Step 3: Install dependencies & build
       - name: Install dependencies and build
         run: |
-          npm i
+          npm ci
           npm run build
 
+      # Step 4: Clean old dist on droplet
+      - name: Remove old dist on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_KEY }}
+          port: 22
+          script: |
+            echo "Removing old dist folder..."
+            rm -rf /var/www/arbilo/arbilo-frontends/dist/*
+            echo "Old dist removed."
+
+      # Step 5: Copy new build to droplet
       - name: Copy dist to droplet
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -32,3 +49,17 @@ jobs:
           port: 22
           source: "dist/*"
           target: "/var/www/arbilo/arbilo-frontends/dist"
+
+      # Step 6: Set proper permissions (optional)
+      - name: Set permissions
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_KEY }}
+          port: 22
+          script: |
+            echo "Setting permissions..."
+            chown -R www-data:www-data /var/www/arbilo/arbilo-frontends/dist
+            chmod -R 755 /var/www/arbilo/arbilo-frontends/dist
+            echo "Deployment finished successfully."
