@@ -40,10 +40,8 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_KEY }}
           script: |
-            # set permissions
             chown -R www-data:www-data /var/www/arbilo/arbilo-frontends/dist || true
             chmod -R 755 /var/www/arbilo/arbilo-frontends/dist || true
-            # reload nginx if you use nginx
             if command -v nginx >/dev/null 2>&1; then
               nginx -t && systemctl reload nginx
             fi
