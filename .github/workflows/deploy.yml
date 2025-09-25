@@ -10,24 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node.js
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      # Step 3: Install dependencies and build React app
+      # 3. Install dependencies and build
       - name: Install dependencies and build
         run: |
           npm ci
           npm run build
 
-      # Step 4: Remove old dist contents on droplet
-      - name: Remove old dist contents
+      # 4. Remove old dist folder contents
+      - name: Clean old dist
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -35,11 +35,11 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           port: 22
           script: |
-            echo "Cleaning old dist folder..."
+            echo "Removing old dist contents..."
             rm -rf /var/www/arbilo/arbilo-frontends/dist/*
-            echo "Old dist cleaned."
+            echo "Old dist removed."
 
-      # Step 5: Copy new build to droplet
+      # 5. Copy new build to droplet
       - name: Copy dist to droplet
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -47,11 +47,11 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_KEY }}
           port: 22
-          source: "dist/*"                         # copies contents, not folder
+          source: "dist/*"       # copy contents only
           target: "/var/www/arbilo/arbilo-frontends/dist"
 
-      # Step 6: Set permissions
-      - name: Set permissions on dist
+      # 6. Set proper permissions
+      - name: Set permissions
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.DROPLET_HOST }}
