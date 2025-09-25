@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies and build
         run: |
-          npm ci
+          npm i
           npm run build
 
       - name: Copy dist to droplet
@@ -32,17 +32,3 @@ jobs:
           port: 22
           source: "dist/*"
           target: "/var/www/arbilo/arbilo-frontends/dist"
-
-      - name: Optional: reload nginx or notify
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DROPLET_KEY }}
-          script: |
-            chown -R www-data:www-data /var/www/arbilo/arbilo-frontends/dist || true
-            chmod -R 755 /var/www/arbilo/arbilo-frontends/dist || true
-            if command -v nginx >/dev/null 2>&1; then
-              nginx -t && systemctl reload nginx
-            fi
-            echo "Deployment done at $(date)"
