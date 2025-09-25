@@ -1,0 +1,50 @@
+name: Deploy React App to Droplet
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Copy dist to droplet
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_KEY }}
+          port: 22
+          source: "dist/*"
+          target: "/var/www/arbilo/arbilo-frontends/dist"
+
+      - name: Optional: reload nginx or notify
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_KEY }}
+          script: |
+            # set permissions
+            chown -R www-data:www-data /var/www/arbilo/arbilo-frontends/dist || true
+            chmod -R 755 /var/www/arbilo/arbilo-frontends/dist || true
+            # reload nginx if you use nginx
+            if command -v nginx >/dev/null 2>&1; then
+              nginx -t && systemctl reload nginx
+            fi
+            echo "Deployment done at $(date)"
