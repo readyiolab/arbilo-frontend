@@ -1,4 +1,4 @@
-name: CI/CD React App to Droplet
+name: CI/CD Arbilo App to Droplet
 
 on:
   push:
@@ -6,28 +6,20 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
-      - name: Checkout code
+      # 1️⃣ Checkout repository (needed for GitHub Actions context)
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      # 2️⃣ Show latest commit for logging
+      - name: Show latest commit
+        run: git log -1 --oneline
 
-      # 3. Install dependencies and build React app
-      - name: Install dependencies and build
-        run: |
-          npm ci
-          npm run build
-
-      # 4. Delete old dist folder on droplet
-      - name: Delete old dist folder
+      # 3️⃣ Delete old project, clone fresh, install, and build
+      - name: Full project refresh and build on droplet
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -35,31 +27,22 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           port: 22
           script: |
-            echo "Deleting old dist folder..."
-            rm -rf /var/www/arbilo/arbilo-frontends/dist
-            echo "Old dist folder deleted."
+            echo "Deleting old project folder..."
+            rm -rf /var/www/arbilo/arbilo-frontends
+            echo "Old project deleted."
 
-      # 5. Copy new build (dist folder) to droplet
-      - name: Copy dist folder to droplet
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DROPLET_KEY }}
-          port: 22
-          source: "dist"  # copy the entire folder
-          target: "/var/www/arbilo/arbilo-frontends"
+            echo "Cloning fresh project from GitHub..."
+            git clone https://github.com/readyiolab/arbilo-frontend.git /var/www/arbilo/arbilo-frontends
+            cd /var/www/arbilo/arbilo-frontends
 
-      # 6. Set permissions
-      - name: Set permissions on dist
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DROPLET_KEY }}
-          port: 22
-          script: |
+            echo "Installing dependencies..."
+            npm ci
+
+            echo "Building React app..."
+            npm run build
+
             echo "Setting permissions..."
-            chown -R www-data:www-data /var/www/arbilo/arbilo-frontends/dist
-            chmod -R 755 /var/www/arbilo/arbilo-frontends/dist
+            chown -R www-data:www-data /var/www/arbilo/arbilo-frontends
+            chmod -R 755 /var/www/arbilo/arbilo-frontends
+
             echo "Deployment finished successfully ✅"
