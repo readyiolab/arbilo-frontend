@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repo
+      # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -20,14 +20,14 @@ jobs:
         with:
           node-version: '18'
 
-      # Step 3: Install dependencies & build
+      # Step 3: Install dependencies and build React app
       - name: Install dependencies and build
         run: |
           npm ci
           npm run build
 
-      # Step 4: Clean old dist on droplet
-      - name: Remove old dist on server
+      # Step 4: Remove old dist contents on droplet
+      - name: Remove old dist contents
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -35,9 +35,9 @@ jobs:
           key: ${{ secrets.DROPLET_KEY }}
           port: 22
           script: |
-            echo "Removing old dist folder..."
+            echo "Cleaning old dist folder..."
             rm -rf /var/www/arbilo/arbilo-frontends/dist/*
-            echo "Old dist removed."
+            echo "Old dist cleaned."
 
       # Step 5: Copy new build to droplet
       - name: Copy dist to droplet
@@ -47,11 +47,11 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_KEY }}
           port: 22
-          source: "dist/*"
+          source: "dist/*"                         # copies contents, not folder
           target: "/var/www/arbilo/arbilo-frontends/dist"
 
-      # Step 6: Set proper permissions (optional)
-      - name: Set permissions
+      # Step 6: Set permissions
+      - name: Set permissions on dist
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -62,4 +62,4 @@ jobs:
             echo "Setting permissions..."
             chown -R www-data:www-data /var/www/arbilo/arbilo-frontends/dist
             chmod -R 755 /var/www/arbilo/arbilo-frontends/dist
-            echo "Deployment finished successfully."
+            echo "Deployment finished successfully ✅"
